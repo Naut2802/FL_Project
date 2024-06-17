@@ -3,14 +3,16 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './index.css';
 import reportWebVitals from './reportWebVitals';
-
+import GlobalStyles from '~/Components/GlobalStyles';
+// import './index.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>,
+    <GlobalStyles>
+        <React.StrictMode>
+            <App />
+        </React.StrictMode>
+    </GlobalStyles>,
 );
 
 // If you want to start measuring performance in your app, pass a function

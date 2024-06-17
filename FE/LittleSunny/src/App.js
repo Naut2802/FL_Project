@@ -1,7 +1,7 @@
-import '~/App.css';
-// import logo from './logo.svg';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { publicRoutes } from './routes';
+// import './App.css';
+// import logo from './logo.svg';
 
 function App() {
     return (
@@ -15,9 +15,6 @@ function App() {
                 </Routes>
             </div>
         </Router>
-        
-
-
 
         // <div className="wrapper">
         //     <header>

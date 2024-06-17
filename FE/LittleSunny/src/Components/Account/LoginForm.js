@@ -1,22 +1,25 @@
 // import React from 'react';
-import './LoginForm.css';
 import { FaUser } from 'react-icons/fa';
 import { FaLock } from 'react-icons/fa';
+import styles from './LoginForm.module.scss';
+import classNames from 'classnames/bind';
 
-const LoginForm = () => {
+const cx = classNames.bind(styles);
+
+function LoginForm() {
     return (
-        <div className="wrapper">
+        <div className={cx('wrapper')}>
             <form action="">
                 <h1>Login</h1>
-                <div className="input-box">
+                <div className={cx('input-box')}>
                     <input type="text" placeholder="Username" required />
-                    <FaUser className="icon" />
+                    <FaUser className={cx('icon')} />
                 </div>
-                <div className="input-box">
-                    <input type="password" placeholder="Passưord" required />
-                    <FaLock className="icon" />
+                <div className={cx('input-box')}>
+                    <input type="password" placeholder="Password" required />
+                    <FaLock className={cx('icon')} />
                 </div>
-                <div className="remember-forgot">
+                <div className={cx('remember-forgot')}>
                     <label>
                         <input type="checkbox" />
                         Remember Me?
@@ -35,6 +38,6 @@ const LoginForm = () => {
             </form>
         </div>
     );
-};
+}
 
 export default LoginForm;
