@@ -1,47 +1,49 @@
 import logo from '~/LittleSunny.png';
-import { AiOutlineLogin } from 'react-icons/ai';
-import './Header.css';
+import { FaUserCircle } from 'react-icons/fa';
+import styles from './Header.module.scss';
+import classNames from 'classnames/bind';
 
+const cx = classNames.bind(styles);
 function Header() {
     return (
-        <div className="wrapper">
-            <nav className="navbar navbar-expand-lg bg-body-tertiary border-2">
-                <div className="container-fluid">
-                    <div className="w-25">
-                        <img src={logo} alt="" className="img img-fluid rounded mx-auto d-block w-50" />
-                    </div>
+        <div className={cx('css')}>
+            <nav className={cx('nav', 'navbar navbar-expand-lg bg-body-tertiary')}>
+                <div className={cx('container-fluid')}>
+                    <a className={cx('navbar-brand')} href="a">
+                        <img src={logo} alt="" className={cx('logo', 'img-fluid rounded mx-auto d-block')} />
+                    </a>
                     <button
                         className="navbar-toggler"
                         type="button"
                         data-bs-toggle="collapse"
-                        data-bs-target="#navbarNavDropdown"
-                        aria-controls="navbarNavDropdown"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
                         aria-expanded="false"
                         aria-label="Toggle navigation"
                     >
                         <span className="navbar-toggler-icon"></span>
                     </button>
-                    <div className="collapse navbar-collapse d-flex justify-content-center" id="navbarNavDropdown">
+                    <div className={cx('collapse navbar-collapse justify-content-center')} id="navbarNav">
                         <ul className="navbar-nav">
                             <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="a">
+                                <a className="nav-link active" aria-current="page" href="/">
                                     TRANG CHỦ
                                 </a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="a">
+                                <a className="nav-link active" aria-current="page" href="a">
                                     KHÓA HỌC
                                 </a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="a">
+                                <a className="nav-link active" aria-current="page" href="a">
                                     TIN TỨC
                                 </a>
                             </li>
                             <li className="nav-item dropdown">
                                 <a
                                     className="nav-link dropdown-toggle"
-                                    href="a"
+                                    href="A"
                                     role="button"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
@@ -50,27 +52,30 @@ function Header() {
                                 </a>
                                 <ul className="dropdown-menu">
                                     <li>
-                                        <a className="dropdown-item" href="a">
-                                            TOEIC
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a className="dropdown-item" href="a">
+                                        <a className="dropdown-item" href="A">
                                             IELT
                                         </a>
                                     </li>
                                     <li>
-                                        <a className="dropdown-item" href="a">
-                                            Something else here
+                                        <a className="dropdown-item" href="A">
+                                            TOEIC
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <hr className="dropdown-divider" />
+                                    </li>
+                                    <li>
+                                        <a className="dropdown-item" href="A">
+                                            ORTHER
                                         </a>
                                     </li>
                                 </ul>
                             </li>
                         </ul>
                     </div>
-                    <button className="btn btn-outline-primary">
-                        <AiOutlineLogin />
-                    </button>
+                    <a className={cx('nav-link active', 'cssa')} aria-current="page" href="login">
+                        <FaUserCircle />
+                    </a>
                 </div>
             </nav>
         </div>
