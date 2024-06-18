@@ -1,11 +1,16 @@
-import React from 'react';
+import Footer from '~/Components/Layout/Footer/Footer';
 import Header from '~/Components/Layout/Header/Header';
-// import Footer from '~/Components/Layout/Footer/Footer';
 
 function Home() {
     return (
-        <div>
+        <div className="">
             <Header />
+
+            <article>
+                <h1 className="text-center">Home Page</h1>
+            </article>
+
+            <Footer />
         </div>
     );
 }

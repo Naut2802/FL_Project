@@ -1,18 +1,24 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import { publicRoutes } from './routes';
+
+import { Navigate, Route, Routes } from 'react-router-dom';
+import LoginForm from './Components/Account/Login/LoginForm';
+import AddStudent from './Components/Layout/AddStudets/AddStudets';
+import Contact from './pages/Contact';
+import Home from './pages/Home';
+import News from './pages/News';
+
 
 function App() {
     return (
-        <Router>
-            <div className="App">
-                <Routes>
-                    {publicRoutes.map((route, index) => {
-                        const Page = route.component;
-                        return <Route key={index} path={route.path} element={<Page />} />;
-                    })}
-                </Routes>
-            </div>
-        </Router>
+        <Routes>
+            <Route path="/" element={<Navigate to="/login" replace={true} />} />
+
+            <Route path="/home" element={<Home />} />
+            <Route path="/login" element={<LoginForm />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/addS" element={<AddStudent />} />
+        </Routes>
+
     );
 }
 

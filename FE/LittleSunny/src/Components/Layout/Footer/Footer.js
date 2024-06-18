@@ -1,13 +1,12 @@
-import { FaHome } from 'react-icons/fa';
-import { FaPhoneAlt } from 'react-icons/fa';
 import classNames from 'classnames/bind';
+import { FaHome, FaPhoneAlt } from 'react-icons/fa';
 
 import styles from './Footer.module.scss';
 
 const cx = classNames.bind(styles);
 function Footer() {
     return (
-        <footer className={cx('wrapper')}>
+        <footer className={cx('wrapper', 'row w-100')}>
             <div className="row">
                 <div className={cx('title-footer', 'col-6 ')}>
                     <ul className={cx('ulCss')}>
