@@ -1,7 +1,8 @@
-import logo from '~/LittleSunny.png';
 import { FaUserCircle } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import styles from './Header.module.scss';
 import classNames from 'classnames/bind';
+import logo from '~/LittleSunny.png';
 
 const cx = classNames.bind(styles);
 function Header() {
@@ -9,9 +10,9 @@ function Header() {
         <div className={cx('css')}>
             <nav className={cx('nav', 'navbar navbar-expand-lg bg-body-tertiary')}>
                 <div className={cx('container-fluid')}>
-                    <a className={cx('navbar-brand')} href="a">
+                    <Link className={cx('navbar-brand')} to="/">
                         <img src={logo} alt="" className={cx('logo', 'img-fluid rounded mx-auto d-block')} />
-                    </a>
+                    </Link>
                     <button
                         className="navbar-toggler"
                         type="button"
@@ -26,56 +27,30 @@ function Header() {
                     <div className={cx('collapse navbar-collapse justify-content-center')} id="navbarNav">
                         <ul className="navbar-nav">
                             <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="/">
-                                    TRANG CHỦ
-                                </a>
+                                <Link className="nav-link active mx-2" aria-current="page" to="hocvien">
+                                    DANH SÁCH HỌC VIÊN
+                                </Link>
                             </li>
-                            <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="a">
-                                    KHÓA HỌC
-                                </a>
+                            <li className="nav-item border-start border-3">
+                                <Link className="nav-link active mx-2" aria-current="page" to="add">
+                                    ĐĂNG KÝ
+                                </Link>
                             </li>
-                            <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="a">
-                                    TIN TỨC
-                                </a>
+                            <li className="nav-item border-start border-3">
+                                <Link className="nav-link active  mx-2" aria-current="page" to="khoahoc">
+                                    DANH SÁCH LỚP
+                                </Link>
                             </li>
-                            <li className="nav-item dropdown">
-                                <a
-                                    className="nav-link dropdown-toggle"
-                                    href="A"
-                                    role="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
-                                    LUYỆN THI
-                                </a>
-                                <ul className="dropdown-menu">
-                                    <li>
-                                        <a className="dropdown-item" href="A">
-                                            IELT
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a className="dropdown-item" href="A">
-                                            TOEIC
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <hr className="dropdown-divider" />
-                                    </li>
-                                    <li>
-                                        <a className="dropdown-item" href="A">
-                                            ORTHER
-                                        </a>
-                                    </li>
-                                </ul>
+                            <li className="nav-item border-start border-3">
+                                <Link className="nav-link active  mx-2" aria-current="page" to="thongke">
+                                    THỐNG KÊ
+                                </Link>
                             </li>
                         </ul>
                     </div>
-                    <a className={cx('nav-link active', 'cssa')} aria-current="page" href="login">
+                    <Link className={cx('nav-link active', 'cssa')} aria-current="page" to="login">
                         <FaUserCircle />
-                    </a>
+                    </Link>
                 </div>
             </nav>
         </div>
