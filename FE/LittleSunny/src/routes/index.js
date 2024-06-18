@@ -1,8 +1,8 @@
+import LoginForm from '~/Components/Account/Login/LoginForm';
+import AddStudent from '~/Components/Layout/AddStudets/AddStudets';
 import Contact from '~/pages/Contact';
 import Home from '~/pages/Home';
 import News from '~/pages/News';
-import LoginForm from '~/Components/Account/Login/LoginForm';
-import AddStudent from '~/Components/Layout/AddStudets/AddStudets';
 
 //Public routes
 const publicRoutes = [

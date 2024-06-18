@@ -1,6 +1,5 @@
 import classNames from 'classnames/bind';
 import { FaUserCircle } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
 import logo from '~/LittleSunny.png';
 import styles from './Header.module.scss';
 
@@ -32,12 +31,12 @@ function Header() {
                                 </a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="a">
+                                <a className="nav-link active" aria-current="page" href="/news">
                                     KHÓA HỌC
                                 </a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="a">
+                                <a className="nav-link active" aria-current="page" href="/contact">
                                     TIN TỨC
                                 </a>
                             </li>
@@ -74,9 +73,9 @@ function Header() {
                             </li>
                         </ul>
                     </div>
-                    <Link className={cx('nav-link active', 'cssa')} aria-current="page" to="login">
+                    <a className={cx('nav-link active', 'cssa')} aria-current="page" href="login">
                         <FaUserCircle />
-                    </Link>
+                    </a>
                 </div>
             </nav>
         </div>

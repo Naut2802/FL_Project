@@ -2,17 +2,20 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import GlobalStyles from '~/Components/GlobalStyles';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import GlobalStyles from '~/Components/GlobalStyles';
 // import './index.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <GlobalStyles>
-        <React.StrictMode>
-            <App />
-        </React.StrictMode>
-    </GlobalStyles>,
+    <BrowserRouter>
+        <GlobalStyles>
+            <React.StrictMode>
+                <App />
+            </React.StrictMode>
+        </GlobalStyles>
+    </BrowserRouter>,
 );
 
 // If you want to start measuring performance in your app, pass a function
