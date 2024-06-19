@@ -1,16 +1,13 @@
-import Footer from '~/Components/Layout/Footer/Footer';
-import Header from '~/Components/Layout/Header/Header';
+// import Header from '~/Components/Layout/Header/Header';
+import SideBar from '~/Components/Layout/SideBar/SideBar';
+// import Footer from '~/Components/Layout/Footer/Footer';
 
 function Home() {
     return (
         <div className="">
-            <Header />
+            <SideBar />
 
-            <article>
-                <h1 className="text-center">Home Page</h1>
-            </article>
-
-            <Footer />
+            {/* <Footer /> */}
         </div>
     );
 }

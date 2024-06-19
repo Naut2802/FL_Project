@@ -1,4 +1,3 @@
-// import React from 'react';
 import { FaUser } from 'react-icons/fa';
 import { FaLock } from 'react-icons/fa';
 import styles from './LoginForm.module.scss';
@@ -19,22 +18,7 @@ function LoginForm() {
                     <input type="password" placeholder="Password" required />
                     <FaLock className={cx('icon')} />
                 </div>
-                <div className={cx('remember-forgot')}>
-                    <label>
-                        <input type="checkbox" />
-                        Remember Me?
-                    </label>
-                    {/* <a href="a">Forgot Password ?</a> */}
-                </div>
-
                 <button type="submit">Login</button>
-
-                {/* <div className="register-link">
-                    <p>
-                        Don't have an account?
-                        <a href="a"> Register</a>
-                    </p>
-                </div> */}
             </form>
         </div>
     );

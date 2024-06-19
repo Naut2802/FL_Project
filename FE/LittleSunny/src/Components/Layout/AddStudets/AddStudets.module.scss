@@ -9,8 +9,8 @@
     padding: 30px 40px;
     height: max-content;
     position: relative;
-    top: 10px;
-    left: 580px;
+    top: 75px;
+    left: 300px;
 }
 .wrapper h1 {
     font-size: 36px;
@@ -28,9 +28,9 @@
 }
 
 .input-box input {
+    // background: transparent;
     width: 100%;
     height: 100%;
-    // background: transparent;
     border: 2px soild rgba(255, 255, 255, 0.2);
     outline: none;
     border-radius: 40px;
@@ -39,9 +39,9 @@
 }
 
 .input-box select {
+    // background: transparent;
     width: 100%;
     height: 100%;
-    // background: transparent;
     border: 2px soild rgba(255, 255, 255, 0.2);
     outline: none;
     border-radius: 40px;
@@ -53,9 +53,6 @@
     color: black;
 }
 
-// .input-box select::placeholder {
-//     color: #fff;
-// }
 .input-box .icon {
     position: absolute;
     right: 20px;

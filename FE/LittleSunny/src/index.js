@@ -2,17 +2,37 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import GlobalStyles from '~/Components/GlobalStyles';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import News from './pages/News';
+import LoginForm from './Components/Account/Login/LoginForm';
+import Contact from './pages/Contact';
+import DSHocVien from './Components/Layout/DSHocVien/DSHocVien';
+import AddStudent from './Components/Layout/AddStudets/AddStudets';
+import DSLopKhoaHoc from './Components/Layout/DSLop_KhoaHoc/DSLopKhoaHoc';
+import ThongKe from './Components/Layout/ThongKe/ThongKe';
+import App from './App';
+// import Home from './pages/Home';
 // import './index.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <BrowserRouter>
         <GlobalStyles>
             <React.StrictMode>
-                <App />
+                {/* <App /> */}
+                <Routes>
+                    <Route path="/" element={<Navigate to="/login" replace={true} />} />
+                    <Route path="/login" element={<LoginForm />} />
+                    <Route path="/home" element={<App />}>
+                        <Route path="news" element={<News />} />
+                        <Route path="contact" element={<Contact />} />
+                        <Route path="student" element={<DSHocVien />} />
+                        <Route path="addS" element={<AddStudent />} />
+                        <Route path="classes" element={<DSLopKhoaHoc />} />
+                        <Route path="thongke" element={<ThongKe />} />
+                    </Route>
+                </Routes>
             </React.StrictMode>
         </GlobalStyles>
     </BrowserRouter>,

@@ -34,12 +34,14 @@ function AddStudent() {
                 <div className={cx('input-box', 'col-6')}>
                     <input type="text" placeholder="Số Tài Khoản" required />
                 </div>
-                <div className="d-flex mt-3">
-                    <button type="submit">Add</button>
-                    <button className="mx-2" type="submit">
-                        Update
+                <hr />
+                <div className="d-grid gap-2 d-md-flex justify-content-md-end ">
+                    <button type="submit" className="w-25">
+                        Thêm
                     </button>
-                    <button type="submit">Clear</button>
+                    <button type="submit" className="w-25">
+                        Làm Mới
+                    </button>
                 </div>
             </form>
         </div>
