@@ -1,25 +1,18 @@
-package com.littlesunny.entity;
+package com.littlesunny.dto.response;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import com.littlesunny.entity.Permission;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
 
-@Entity
-@Builder
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Role {
-	@Id
+public class RoleResponse {
 	String name;
 	String description;
-	
-	@ManyToMany
 	Set<Permission> permissions;
 }

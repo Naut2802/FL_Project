@@ -1,14 +1,15 @@
 package com.littlesunny.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Data
 @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StudentClass {
 	@Id
@@ -18,7 +19,7 @@ public class StudentClass {
 	@ManyToOne @JoinColumn(name = "student_id")
 	Student student;
 	@ManyToOne @JoinColumn(name = "class_id")
-	Class Clazz;
+	Class clazz;
 	
 	float score;
 }

@@ -1,19 +1,16 @@
-package com.littlesunny.entity;
+package com.littlesunny.dto.request;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Entity
-@Builder
-@Getter
-@Setter
+import java.util.Set;
+
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Permission {
-	@Id
+public class PermissionRequest {
 	String name;
 	String description;
 }

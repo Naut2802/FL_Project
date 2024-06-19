@@ -1,16 +1,17 @@
 package com.littlesunny.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Class {
@@ -21,6 +22,6 @@ public class Class {
 	
 	@ManyToOne @JoinColumn(name = "courseId")
 	Course course;
-	@OneToMany(mappedBy = "clazz", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	Set<Student> students = new HashSet<>();
+	@OneToMany(mappedBy = "clazz", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	Set<StudentClass> studentClasses = new HashSet<>();
 }
