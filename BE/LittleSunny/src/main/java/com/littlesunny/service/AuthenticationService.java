@@ -44,25 +44,25 @@ public class AuthenticationService {
 	InvalidatedTokenRepository invalidatedTokenRepository;
 	
 	@NonFinal
-	@Value("${jwt.access-signer-signature}")
-	String ACCESS_SIGNER_KEY;
+	@Value("${jwt.access-token-secret-signature}")
+	String ACCESS_TOKEN_SIGNATURE;
 	@NonFinal
-	@Value("${jwt.refresh-signer-signature}")
-	String REFRESH_SIGNER_KEY;
+	@Value("${jwt.refresh-token-secret-signature}")
+	String REFRESH_TOKEN_SIGNATURE;
 	
 	@NonFinal
-	@Value("${jwt.access-valid-duration}")
-	long ACCESS_VALID_DURATION;
+	@Value("${jwt.access-token-valid-duration}")
+	long ACCESS_TOKEN_VALID_DURATION;
 	@NonFinal
-	@Value("${jwt.refresh-valid-duration}")
-	long REFRESH_VALID_DURATION;
+	@Value("${jwt.refresh-token-valid-duration}")
+	long REFRESH_TOKEN_VALID_DURATION;
 	
 	public IntrospectResponse introspect(IntrospectRequest request) throws ParseException, JOSEException {
 		var token = request.getToken();
 		boolean isValid = true;
 		
 		try {
-			verifyToken(token, ACCESS_SIGNER_KEY);
+			verifyToken(token, ACCESS_TOKEN_SIGNATURE);
 		} catch (AppException e) {
 			isValid = false;
 		}
@@ -82,8 +82,8 @@ public class AuthenticationService {
 		
 		if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
 		
-		var accessToken = generateToken(user, ACCESS_SIGNER_KEY, ACCESS_VALID_DURATION);
-		var refreshToken = generateToken(user, REFRESH_SIGNER_KEY, REFRESH_VALID_DURATION);
+		var accessToken = generateToken(user, ACCESS_TOKEN_SIGNATURE, ACCESS_TOKEN_VALID_DURATION);
+		var refreshToken = generateToken(user, REFRESH_TOKEN_SIGNATURE, REFRESH_TOKEN_VALID_DURATION);
 		
 		return AuthenticationResponse.builder()
 				.accessToken(accessToken)
@@ -94,7 +94,7 @@ public class AuthenticationService {
 	
 	public void logout(LogoutRequest request) throws ParseException, JOSEException {
 		try {
-			SignedJWT signedJWT = verifyToken(request.getToken(), ACCESS_SIGNER_KEY);
+			SignedJWT signedJWT = verifyToken(request.getToken(), ACCESS_TOKEN_SIGNATURE);
 			
 			String jwtId = signedJWT.getJWTClaimsSet().getJWTID();
 			var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
@@ -109,11 +109,11 @@ public class AuthenticationService {
 	}
 	
 	public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
-		SignedJWT signedJWT = verifyToken(request.getToken(), REFRESH_SIGNER_KEY);
+		SignedJWT signedJWT = verifyToken(request.getToken(), REFRESH_TOKEN_SIGNATURE);
 		User user = userRepository.findByUsername(signedJWT.getJWTClaimsSet().getSubject())
 				.orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 		
-		var accessToken = generateToken(user, ACCESS_SIGNER_KEY, ACCESS_VALID_DURATION);
+		var accessToken = generateToken(user, ACCESS_TOKEN_SIGNATURE, ACCESS_TOKEN_VALID_DURATION);
 		
 		return AuthenticationResponse.builder()
 				.accessToken(accessToken)
@@ -122,7 +122,7 @@ public class AuthenticationService {
 				.build();
 	}
 	
-	private String generateToken(User user, String signerSignature, long validDuration) {
+	private String generateToken(User user, String secretSignature, long validDuration) {
 		JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 		
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
@@ -138,7 +138,7 @@ public class AuthenticationService {
 		JWSObject object = new JWSObject(header, payload);
 		
 		try {
-			object.sign(new MACSigner(signerSignature.getBytes()));
+			object.sign(new MACSigner(secretSignature.getBytes()));
 			return object.serialize();
 		} catch (JOSEException e) {
 			log.error("Cannot create JWT", e);
