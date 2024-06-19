@@ -116,12 +116,18 @@ public class AuthenticationService {
 	}
 	
 	public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
-		SignedJWT signedJWT = verifyToken(request.getToken(), true);
+		SignedJWT signedJWT = null;
+		try {
+			signedJWT = verifyToken(request.getToken(), true);
+		} catch (AppException e) {
+			if (e.getErrorCode().getStatusCode().isSameCodeAs(HttpStatus.GONE))
+				throw new AppException(ErrorCode.UNAUTHENTICATED);
+		}
+		
 		User user = userRepository.findByUsername(signedJWT.getJWTClaimsSet().getSubject())
 				.orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 		
 		var accessToken = generateToken(user, ACCESS_TOKEN_SIGNATURE, ACCESS_TOKEN_VALID_DURATION);
-		
 		return AuthenticationResponse.builder()
 				.accessToken(accessToken)
 				.refreshToken(request.getToken())
@@ -162,14 +168,14 @@ public class AuthenticationService {
 		
 		var verified = signedJWT.verify(verifier);
 		
-		if(!(verified && expiryTime.after(new Date())))
+		if (!verified || invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
+			throw new AppException(ErrorCode.UNAUTHENTICATED);
+		
+		if (!expiryTime.after(new Date()))
 			throw new AppException(ErrorCode.TOKEN_EXPIRED);
 		
-		if(!userRepository.existsByUsername(signedJWT.getJWTClaimsSet().getSubject()))
+		if (!userRepository.existsByUsername(signedJWT.getJWTClaimsSet().getSubject()))
 			throw new AppException(ErrorCode.USER_NOT_EXISTED);
-		
-		if(invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
-			throw new AppException(ErrorCode.UNAUTHENTICATED);
 			
 		return signedJWT;
 	}
