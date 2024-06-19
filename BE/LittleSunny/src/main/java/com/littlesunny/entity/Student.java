@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,7 +21,7 @@ public class Student {
 	long id;
 	String fullName;
 	String address;
-	String dob;
+	LocalDate dob;
 	String phoneNumber;
 	String parentBankNumber;
 	

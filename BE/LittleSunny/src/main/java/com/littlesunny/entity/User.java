@@ -6,7 +6,10 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
 
+import static jakarta.persistence.CascadeType.REMOVE;
+
 @Entity
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor

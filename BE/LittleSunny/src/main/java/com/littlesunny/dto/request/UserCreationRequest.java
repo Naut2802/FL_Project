@@ -6,6 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -14,5 +18,4 @@ public class UserCreationRequest {
 	String username;
 	@Size(min = 4, message = "PASSWORD_INVALID")
 	String password;
-	String email;
 }

@@ -12,7 +12,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(value = AppException.class)
 	ResponseEntity<ResponseApi> appExceptionHandling(AppException appException) {
 		ErrorCode errorCode = appException.getErrorCode();
-		ResponseApi responseApi = new ResponseApi<>();
+		ResponseApi responseApi = new ResponseApi();
 		
 		responseApi.setCode(errorCode.getCode());
 		responseApi.setMessage(errorCode.getMessage());
