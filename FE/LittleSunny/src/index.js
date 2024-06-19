@@ -3,6 +3,8 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import GlobalStyles from '~/Components/GlobalStyles';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -15,6 +17,7 @@ root.render(
                 <App />
             </React.StrictMode>
         </GlobalStyles>
+        <ToastContainer position="bottom-left" theme="colored" />
     </BrowserRouter>,
 );
 
