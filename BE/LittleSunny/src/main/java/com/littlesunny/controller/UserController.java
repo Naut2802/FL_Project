@@ -1,5 +1,6 @@
 package com.littlesunny.controller;
 
+import com.littlesunny.dto.request.AuthorizeUserRequest;
 import com.littlesunny.dto.request.UserCreationRequest;
 import com.littlesunny.dto.request.UserUpdateRequest;
 import com.littlesunny.dto.response.ResponseApi;
@@ -54,6 +55,13 @@ public class UserController {
 	public ResponseApi<UserResponse> updateUser(@PathVariable String userId, @RequestBody UserUpdateRequest request) {
 		return ResponseApi.<UserResponse>builder()
 				.result(userService.updateUser(userId, request))
+				.build();
+	}
+	
+	@PutMapping("/authorize/{userId}")
+	public ResponseApi<UserResponse> authorizeUser(@PathVariable String userId, @RequestBody AuthorizeUserRequest request) {
+		return ResponseApi.<UserResponse>builder()
+				.result(userService.authorizeUser(userId, request))
 				.build();
 	}
 	
