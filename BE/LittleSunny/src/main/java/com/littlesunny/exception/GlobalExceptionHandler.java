@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class GlobalExceptionHandler {
 	@ExceptionHandler(value = Exception.class)
-	ResponseEntity<ResponseApi> handlingRuntimeException(RuntimeException exception) {
+	ResponseEntity<ResponseApi> runtimeExceptionHandling(RuntimeException exception) {
 		log.error("Exception: ", exception);
 		ResponseApi apiResponse = new ResponseApi();
 		
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
 	}
 	
 	@ExceptionHandler(value = AccessDeniedException.class)
-	ResponseEntity<ResponseApi> handlingAccessDeniedException(AccessDeniedException exception) {
+	ResponseEntity<ResponseApi> accessDeniedExceptionHandling(AccessDeniedException exception) {
 		ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
 		
 		return ResponseEntity.status(errorCode.getStatusCode())
