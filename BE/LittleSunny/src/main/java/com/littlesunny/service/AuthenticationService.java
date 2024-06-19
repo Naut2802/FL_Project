@@ -23,6 +23,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -57,18 +59,23 @@ public class AuthenticationService {
 	@Value("${jwt.refresh-token-valid-duration}")
 	long REFRESH_TOKEN_VALID_DURATION;
 	
-	public IntrospectResponse introspect(IntrospectRequest request) throws ParseException, JOSEException {
+	public IntrospectResponse introspect(IntrospectRequest request) {
 		var token = request.getToken();
 		boolean isValid = true;
+		ErrorCode errorCode = null;
 		
 		try {
-			verifyToken(token, ACCESS_TOKEN_SIGNATURE);
+			verifyToken(token, false);
 		} catch (AppException e) {
+			errorCode = e.getErrorCode();
 			isValid = false;
+		} catch (JOSEException | ParseException e) {
+			System.out.println(e.getMessage());
 		}
 		
 		return IntrospectResponse.builder()
 				.valid(isValid)
+				.errorCode(errorCode)
 				.build();
 	}
 	
@@ -94,7 +101,7 @@ public class AuthenticationService {
 	
 	public void logout(LogoutRequest request) throws ParseException, JOSEException {
 		try {
-			SignedJWT signedJWT = verifyToken(request.getToken(), ACCESS_TOKEN_SIGNATURE);
+			SignedJWT signedJWT = verifyToken(request.getToken(), false);
 			
 			String jwtId = signedJWT.getJWTClaimsSet().getJWTID();
 			var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
@@ -109,7 +116,7 @@ public class AuthenticationService {
 	}
 	
 	public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
-		SignedJWT signedJWT = verifyToken(request.getToken(), REFRESH_TOKEN_SIGNATURE);
+		SignedJWT signedJWT = verifyToken(request.getToken(), true);
 		User user = userRepository.findByUsername(signedJWT.getJWTClaimsSet().getSubject())
 				.orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 		
@@ -146,17 +153,17 @@ public class AuthenticationService {
 		}
 	}
 	
-	private SignedJWT verifyToken(String token, String signerSignature) throws JOSEException, ParseException {
+	private SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
 		SignedJWT signedJWT = SignedJWT.parse(token);
 		
-		JWSVerifier verifier = new MACVerifier(signerSignature.getBytes());
+		JWSVerifier verifier = new MACVerifier(isRefresh ? REFRESH_TOKEN_SIGNATURE : ACCESS_TOKEN_SIGNATURE);
 		
 		Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
 		
 		var verified = signedJWT.verify(verifier);
 		
 		if(!(verified && expiryTime.after(new Date())))
-			throw new AppException(ErrorCode.UNAUTHENTICATED);
+			throw new AppException(ErrorCode.TOKEN_EXPIRED);
 		
 		if(!userRepository.existsByUsername(signedJWT.getJWTClaimsSet().getSubject()))
 			throw new AppException(ErrorCode.USER_NOT_EXISTED);

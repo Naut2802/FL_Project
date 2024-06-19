@@ -1,12 +1,11 @@
 package com.littlesunny.config;
 
 import com.littlesunny.dto.request.IntrospectRequest;
+import com.littlesunny.exception.CustomAuthenticationException;
 import com.littlesunny.service.AuthenticationService;
-import com.nimbusds.jose.JOSEException;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -15,7 +14,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
-import java.text.ParseException;
+import javax.naming.AuthenticationException;
 import java.util.Objects;
 
 @Component
@@ -32,9 +31,13 @@ public class CustomJwtDecoder implements JwtDecoder {
 		try {
 			var response = authenticationService.introspect(IntrospectRequest.builder().token(token).build());
 			
-			if (!response.isValid()) throw new JwtException("Token Invalid");
-		} catch (JOSEException | ParseException e) {
-			throw new JwtException(e.getMessage());
+			if (response.getErrorCode() != null
+					&& response.getErrorCode().getStatusCode().isSameCodeAs(HttpStatus.GONE))
+				throw new JwtException("Token expired");
+			
+			if (!response.isValid()) throw new JwtException("Token invalid");
+		} catch (JwtException e) {
+			throw new CustomAuthenticationException("JWT exception", e);
 		}
 		
 		if (Objects.isNull(decoder)) {

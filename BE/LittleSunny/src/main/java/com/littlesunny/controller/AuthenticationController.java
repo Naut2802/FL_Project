@@ -25,7 +25,7 @@ import java.text.ParseException;
 public class AuthenticationController {
 	AuthenticationService authenticationService;
 	
-	@PostMapping
+	@PostMapping("token")
 	public ResponseApi<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
 		return ResponseApi.<IntrospectResponse>builder()
 				.result(authenticationService.introspect(request))

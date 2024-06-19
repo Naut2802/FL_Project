@@ -1,5 +1,6 @@
 package com.littlesunny.service;
 
+import com.littlesunny.dto.request.AuthorizeUserRequest;
 import com.littlesunny.dto.request.RoleRequest;
 import com.littlesunny.dto.request.UserCreationRequest;
 import com.littlesunny.dto.request.UserUpdateRequest;
@@ -9,6 +10,7 @@ import com.littlesunny.entity.User;
 import com.littlesunny.exception.AppException;
 import com.littlesunny.exception.ErrorCode;
 import com.littlesunny.mapper.UserMapper;
+import com.littlesunny.repository.RoleRepository;
 import com.littlesunny.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class UserService {
+	private final RoleRepository roleRepository;
 	UserRepository userRepository;
 	UserMapper userMapper;
 	PasswordEncoder passwordEncoder;
@@ -68,6 +71,16 @@ public class UserService {
 		
 		userMapper.updateUser(user, request);
 		user.setPassword(passwordEncoder.encode(request.getPassword()));
+		return userMapper.toUserResponse(userRepository.save(user));
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	public UserResponse authorizeUser(String userId, AuthorizeUserRequest request) {
+		User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+		
+		List<Role> roles = roleRepository.findAllById(request.getRoles());
+		
+		user.setRoles(new HashSet<>(roles));
 		return userMapper.toUserResponse(userRepository.save(user));
 	}
 	
