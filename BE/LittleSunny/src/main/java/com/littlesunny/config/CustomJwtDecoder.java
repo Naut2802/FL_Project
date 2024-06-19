@@ -20,8 +20,8 @@ import java.util.Objects;
 
 @Component
 public class CustomJwtDecoder implements JwtDecoder {
-	@Value("${jwt.access-signer-signature}")
-	private String ACCESS_SIGNER_KEY;
+	@Value("${jwt.access-token-secret-signature}")
+	private String ACCESS_TOKEN_SIGNATURE;
 	@Autowired
 	private AuthenticationService authenticationService;
 	private NimbusJwtDecoder decoder = null;
@@ -38,7 +38,7 @@ public class CustomJwtDecoder implements JwtDecoder {
 		}
 		
 		if (Objects.isNull(decoder)) {
-			SecretKeySpec secretKeySpec = new SecretKeySpec(ACCESS_SIGNER_KEY.getBytes(), "HS512");
+			SecretKeySpec secretKeySpec = new SecretKeySpec(ACCESS_TOKEN_SIGNATURE.getBytes(), "HS512");
 			decoder = NimbusJwtDecoder.withSecretKey(secretKeySpec)
 					.macAlgorithm(MacAlgorithm.HS512)
 					.build();
