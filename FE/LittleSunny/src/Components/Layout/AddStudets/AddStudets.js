@@ -9,7 +9,7 @@ function AddStudent() {
             <form action="" className="row">
                 <h1>Nhập Thông Tin Học Viên</h1>
                 <div className={cx('input-box', 'col-6')}>
-                    <input type="text" placeholder="Họ Tên" required />
+                    <input id="username" type="text" placeholder="Họ Tên" required />
                 </div>
                 <div className={cx('input-box', 'col-6')}>
                     <input type="text" placeholder="Số Điện Thoại" required />
@@ -22,10 +22,10 @@ function AddStudent() {
                 </div>
                 <div className={cx('input-box')}>
                     <select className="form-select" defaultValue="">
-                        <option selected>Khóa Học</option>
-                        <option value="1">Khóa Học 1</option>
-                        <option value="2">Khóa Học 2</option>
-                        <option value="3">Khóa Học 3</option>
+                        <option selected>Lớp Học</option>
+                        <option value="1">Lớp Học 1</option>
+                        <option value="2">Lớp Học 2</option>
+                        <option value="3">Lớp Học 3</option>
                     </select>
                 </div>
                 <div className={cx('input-box', 'col-6')}>
