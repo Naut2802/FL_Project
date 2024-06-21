@@ -27,6 +27,4 @@ public class Student {
 	
 	@OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	Set<StudentClass> studentClasses = new HashSet<>();
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	Set<Course> courses;
 }

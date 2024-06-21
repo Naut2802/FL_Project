@@ -12,7 +12,7 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoleResponse {
-	String name;
+	String roleName;
 	String description;
 	Set<Permission> permissions;
 }

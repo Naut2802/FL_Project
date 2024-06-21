@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Entity
 @Builder
 @Getter
@@ -22,4 +24,21 @@ public class StudentClass {
 	Class clazz;
 	
 	float score;
+	LocalDate joinDate;
+	double tuitionFee;
+	LocalDate expirationDate;
+	boolean isPaidFee;
+	
+	
+	public StudentClass(Student student, Class clazz, float score,
+	                    LocalDate joinDate, double tuitionFee,
+	                    LocalDate expirationDate, boolean isPaidFee) {
+		this.student = student;
+		this.clazz = clazz;
+		this.score = score;
+		this.joinDate = joinDate;
+		this.tuitionFee = tuitionFee;
+		this.expirationDate = expirationDate;
+		this.isPaidFee = isPaidFee;
+	}
 }

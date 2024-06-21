@@ -20,7 +20,13 @@ public enum ErrorCode {
 	UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
 	UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
 	INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
-	TOKEN_EXPIRED(1100, "Token expired", HttpStatus.GONE);
+	TOKEN_EXPIRED(1100, "Token expired", HttpStatus.GONE),
+	PERMISSION_NOT_EXISTED(1009, "Permission not existed", HttpStatus.NOT_FOUND),
+	ROLE_NOT_EXISTED(1010, "Role not existed", HttpStatus.NOT_FOUND),
+	COURSE_NOT_EXISTED(1011, "Course not existed", HttpStatus.NOT_FOUND),
+	CLASS_NOT_EXISTED(1012, "Class not existed", HttpStatus.NOT_FOUND),
+	STUDENT_NOT_EXISTED(1013, "Student not existed", HttpStatus.NOT_FOUND),
+	EXISTED(1014, "Entity existed", HttpStatus.BAD_REQUEST);
 	
 	int code;
 	String message;

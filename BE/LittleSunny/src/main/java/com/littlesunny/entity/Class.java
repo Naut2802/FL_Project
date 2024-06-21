@@ -18,6 +18,7 @@ public class Class {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int id;
+	@Column(unique = true)
 	String className;
 	
 	@ManyToOne @JoinColumn(name = "courseId")

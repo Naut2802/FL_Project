@@ -38,15 +38,15 @@ public class UserService {
 	PasswordEncoder passwordEncoder;
 	
 	public UserResponse createUser(UserCreationRequest request) {
-		User user = userMapper.toUser(request);
-		
 		if(userRepository.existsByUsername(request.getUsername()))
 			throw new AppException(ErrorCode.USER_EXISTED);
+		
+		var user = userMapper.toUser(request);
 		
 		user.setPassword(encodePassword(user.getUsername(), user.getPassword()));
 		
 		Set<Role> roles = new HashSet<>();
-		Role role = new Role();
+		var role = new Role();
 		role.setName("USER");
 		roles.add(role);
 		
@@ -68,7 +68,8 @@ public class UserService {
 	
 	@PostAuthorize("returnObject.username == authentication.name")
 	public UserResponse updateUser(String userId, UserUpdateRequest request) {
-		User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+		var user = userRepository.findById(userId).orElseThrow(()
+				-> new AppException(ErrorCode.USER_NOT_EXISTED));
 		
 		userMapper.updateUser(user, request);
 		user.setPassword(encodePassword(user.getUsername(), user.getPassword()));
@@ -77,9 +78,10 @@ public class UserService {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	public UserResponse authorizeUser(String userId, AuthorizeUserRequest request) {
-		User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+		var user = userRepository.findById(userId).orElseThrow(()
+				-> new AppException(ErrorCode.USER_NOT_EXISTED));
 		
-		List<Role> roles = roleRepository.findAllById(request.getRoles());
+		List<Role> roles = roleRepository.findAllByName(request.getRoles());
 		
 		user.setRoles(new HashSet<>(roles));
 		return userMapper.toUserResponse(userRepository.save(user));
@@ -87,7 +89,8 @@ public class UserService {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	public UserResponse getUser(String userId) {
-		return userMapper.toUserResponse(userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
+		return userMapper.toUserResponse(userRepository.findById(userId).orElseThrow(()
+				-> new AppException(ErrorCode.USER_NOT_EXISTED)));
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
@@ -97,6 +100,9 @@ public class UserService {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	public void deleteUser(String userId) {
+		if(!userRepository.existsById(userId))
+			throw new AppException(ErrorCode.USER_NOT_EXISTED);
+		
 		userRepository.deleteById(userId);
 	}
 	

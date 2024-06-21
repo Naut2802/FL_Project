@@ -16,7 +16,8 @@ import java.util.Set;
 public class Course {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int id;
+	long id;
+	@Column(unique = true)
 	String courseName;
 	double coursePrice;
 	

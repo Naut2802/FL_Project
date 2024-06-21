@@ -3,5 +3,9 @@ package com.littlesunny.repository;
 import com.littlesunny.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RoleRepository extends JpaRepository<Role, String> {
+import java.util.List;
+
+public interface RoleRepository extends JpaRepository<Role, Long> {
+	boolean existsByRoleName(String roleName);
+	List<Role> findAllByRoleName(Iterable<String> names);
 }

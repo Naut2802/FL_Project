@@ -3,7 +3,7 @@ package com.littlesunny.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -11,10 +11,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class StudentRequest {
-	String fullName;
-	String address;
-	LocalDate dob;
-	String phoneNumber;
-	String parentBankNumber;
+public class CourseRequest {
+	String courseName;
+	String coursePrice;
+	Set<String> classes;
 }

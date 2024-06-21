@@ -1,17 +1,17 @@
-package com.littlesunny.dto.request;
+package com.littlesunny.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RoleRequest {
-	String roleName;
-	String description;
-	Set<String> permissions;
+public class ClassDTO {
+	String className;
+	Set<String> students;
 }

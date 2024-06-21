@@ -28,16 +28,16 @@ public class PermissionController {
 				.build();
 	}
 	
-	@PutMapping("/{permission}")
-	public ResponseApi<PermissionResponse> updatePermission(@PathVariable String permission, @RequestBody PermissionRequest request) {
+	@PutMapping("/{id}")
+	public ResponseApi<PermissionResponse> updatePermission(@PathVariable long id, @RequestBody PermissionRequest request) {
 		return ResponseApi.<PermissionResponse>builder()
-				.result(permissionService.updatePermission(permission, request))
+				.result(permissionService.updatePermission(id, request))
 				.build();
 	}
 	
-	@DeleteMapping("/{permission}")
-	public ResponseApi<String> deletePermission(@PathVariable String permission) {
-		permissionService.deletePermission(permission);
+	@DeleteMapping("/{id}")
+	public ResponseApi<String> deletePermission(@PathVariable long id) {
+		permissionService.deletePermission(id);
 		return ResponseApi.<String>builder()
 				.result("Permission has been deleted.")
 				.build();
