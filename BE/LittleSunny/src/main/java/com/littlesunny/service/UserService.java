@@ -47,7 +47,7 @@ public class UserService {
 		
 		Set<Role> roles = new HashSet<>();
 		var role = new Role();
-		role.setName("USER");
+		role.setRoleName("USER");
 		roles.add(role);
 		
 		user.setRoles(roles);
@@ -81,7 +81,7 @@ public class UserService {
 		var user = userRepository.findById(userId).orElseThrow(()
 				-> new AppException(ErrorCode.USER_NOT_EXISTED));
 		
-		List<Role> roles = roleRepository.findAllByName(request.getRoles());
+		List<Role> roles = roleRepository.findAllByRoleName(request.getRoles());
 		
 		user.setRoles(new HashSet<>(roles));
 		return userMapper.toUserResponse(userRepository.save(user));
