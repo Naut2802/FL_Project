@@ -123,7 +123,7 @@ public class AuthenticationService {
 			
 			redisTokenRepository.deleteByToken(request.getRefreshToken());
 		} catch (AppException e) {
-			log.info(e.getMessage());
+			log.info("JWT Invalid");
 		}
 	}
 	
