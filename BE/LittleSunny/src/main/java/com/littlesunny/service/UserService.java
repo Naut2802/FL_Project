@@ -43,7 +43,7 @@ public class UserService {
 		if(userRepository.existsByUsername(request.getUsername()))
 			throw new AppException(ErrorCode.USER_EXISTED);
 		
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setPassword(encodePassword(user.getUsername(), user.getPassword()));
 		
 		Set<Role> roles = new HashSet<>();
 		Role role = new Role();
@@ -51,6 +51,7 @@ public class UserService {
 		roles.add(role);
 		
 		user.setRoles(roles);
+		
 		userRepository.save(user);
 		return userMapper.toUserResponse(user);
 	}
@@ -70,7 +71,7 @@ public class UserService {
 		User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 		
 		userMapper.updateUser(user, request);
-		user.setPassword(passwordEncoder.encode(request.getPassword()));
+		user.setPassword(encodePassword(user.getUsername(), user.getPassword()));
 		return userMapper.toUserResponse(userRepository.save(user));
 	}
 	
@@ -97,5 +98,9 @@ public class UserService {
 	@PreAuthorize("hasRole('ADMIN')")
 	public void deleteUser(String userId) {
 		userRepository.deleteById(userId);
+	}
+	
+	private String encodePassword(String username, String password) {
+		return passwordEncoder.encode(username + password);
 	}
 }

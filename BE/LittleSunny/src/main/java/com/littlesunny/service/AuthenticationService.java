@@ -7,9 +7,11 @@ import com.littlesunny.dto.request.RefreshRequest;
 import com.littlesunny.dto.response.AuthenticationResponse;
 import com.littlesunny.dto.response.IntrospectResponse;
 import com.littlesunny.entity.InvalidatedToken;
+import com.littlesunny.entity.RefreshTokenWhiteList;
 import com.littlesunny.entity.User;
 import com.littlesunny.exception.AppException;
 import com.littlesunny.exception.ErrorCode;
+import com.littlesunny.repository.RedisTokenRepository;
 import com.littlesunny.repository.InvalidatedTokenRepository;
 import com.littlesunny.repository.UserRepository;
 import com.nimbusds.jose.*;
@@ -24,10 +26,10 @@ import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
@@ -44,6 +46,7 @@ import java.util.UUID;
 public class AuthenticationService {
 	UserRepository userRepository;
 	InvalidatedTokenRepository invalidatedTokenRepository;
+	RedisTokenRepository redisTokenRepository;
 	
 	@NonFinal
 	@Value("${jwt.access-token-secret-signature}")
@@ -85,12 +88,18 @@ public class AuthenticationService {
 				.findByUsername(request.getUsername())
 				.orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 		
-		boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
+		boolean authenticated = passwordEncoder.matches(request.getUsername() + request.getPassword(), user.getPassword());
 		
 		if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
 		
 		var accessToken = generateToken(user, ACCESS_TOKEN_SIGNATURE, ACCESS_TOKEN_VALID_DURATION);
 		var refreshToken = generateToken(user, REFRESH_TOKEN_SIGNATURE, REFRESH_TOKEN_VALID_DURATION);
+		
+		redisTokenRepository.save(RefreshTokenWhiteList.builder()
+				.token(refreshToken)
+				.expiryTime(new Date(Instant.now().plus(REFRESH_TOKEN_VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
+				.user(user)
+				.build());
 		
 		return AuthenticationResponse.builder()
 				.accessToken(accessToken)
@@ -99,9 +108,10 @@ public class AuthenticationService {
 				.build();
 	}
 	
+	@Transactional
 	public void logout(LogoutRequest request) throws ParseException, JOSEException {
 		try {
-			SignedJWT signedJWT = verifyToken(request.getToken(), false);
+			SignedJWT signedJWT = verifyToken(request.getAccessToken(), false);
 			
 			String jwtId = signedJWT.getJWTClaimsSet().getJWTID();
 			var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
@@ -110,11 +120,14 @@ public class AuthenticationService {
 					invalidatedTokenRepository.save(InvalidatedToken.builder()
 							.id(jwtId)
 							.expiryTime(expiryTime).build());
+			
+			redisTokenRepository.deleteByToken(request.getRefreshToken());
 		} catch (AppException e) {
-			log.info("JWT expired");
+			log.info(e.getMessage());
 		}
 	}
 	
+	@Transactional
 	public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
 		SignedJWT signedJWT = null;
 		try {
@@ -127,10 +140,23 @@ public class AuthenticationService {
 		User user = userRepository.findByUsername(signedJWT.getJWTClaimsSet().getSubject())
 				.orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 		
+		redisTokenRepository.findByToken(request.getToken())
+				.orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+		
+		redisTokenRepository.deleteByToken(request.getToken());
+		
 		var accessToken = generateToken(user, ACCESS_TOKEN_SIGNATURE, ACCESS_TOKEN_VALID_DURATION);
+		var refreshToken = generateToken(user, REFRESH_TOKEN_SIGNATURE, REFRESH_TOKEN_VALID_DURATION);
+		
+		redisTokenRepository.save(RefreshTokenWhiteList.builder()
+				.token(refreshToken)
+				.expiryTime(new Date(Instant.now().plus(REFRESH_TOKEN_VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
+				.user(user)
+				.build());
+		
 		return AuthenticationResponse.builder()
 				.accessToken(accessToken)
-				.refreshToken(request.getToken())
+				.refreshToken(refreshToken)
 				.authenticated(true)
 				.build();
 	}
@@ -144,6 +170,7 @@ public class AuthenticationService {
 				.issueTime(new Date())
 				.expirationTime(new Date(Instant.now().plus(validDuration, ChronoUnit.SECONDS).toEpochMilli()))
 				.jwtID(UUID.randomUUID().toString())
+				.claim("userId", user.getId())
 				.claim("scope", buildScope(user))
 				.build();
 		

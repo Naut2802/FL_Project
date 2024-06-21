@@ -1,5 +1,6 @@
 package com.littlesunny.mapper;
 
+import com.littlesunny.dto.request.LoginRequest;
 import com.littlesunny.dto.request.UserCreationRequest;
 import com.littlesunny.dto.request.UserUpdateRequest;
 import com.littlesunny.dto.response.UserResponse;
@@ -13,6 +14,8 @@ public interface UserMapper {
 	User toUser(UserCreationRequest request);
 	
 	UserResponse toUserResponse(User user);
+	
+	LoginRequest toLoginRequest(User user);
 	
 	@Mapping(target = "roles", ignore = true)
 	void updateUser(@MappingTarget User user, UserUpdateRequest request);
