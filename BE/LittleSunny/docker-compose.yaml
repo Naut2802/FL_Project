@@ -1,0 +1,30 @@
+version: '26.1.4'
+
+services:
+  mysql:
+    image: mysql:8.0.37-debian
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: little_sunny
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  app:
+    image: littlesunny:0.0.1
+    container_name: littlesunny
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:2802"
+    env_file:
+      - .env
+      - .env.prod
+    depends_on:
+      - mysql
+
+volumes:
+  mysql-data:
