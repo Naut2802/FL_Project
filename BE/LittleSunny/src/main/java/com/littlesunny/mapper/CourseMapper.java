@@ -9,6 +9,8 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface CourseMapper {
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "classes", ignore = true)
 	Course toCourse(CourseRequest request);
 	
 	CourseResponse toCourseResponse(Course course);

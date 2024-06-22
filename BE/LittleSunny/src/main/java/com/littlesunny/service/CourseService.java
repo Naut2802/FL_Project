@@ -41,7 +41,7 @@ public class CourseService {
 				new AppException(ErrorCode.COURSE_NOT_EXISTED));
 		
 		courseMapper.updateCourse(course, request);
-		List<Class> classes = classRepository.findAllByClassName(request.getClasses());
+		List<Class> classes = classRepository.findAllByClassNameIn(request.getClasses());
 		
 		course.setClasses(new HashSet<>(classes));
 		return courseMapper.toCourseResponse(courseRepository.save(course));

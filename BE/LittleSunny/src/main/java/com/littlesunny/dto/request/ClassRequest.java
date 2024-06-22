@@ -1,4 +1,4 @@
-package com.littlesunny.dto;
+package com.littlesunny.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,7 +11,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ClassDTO {
+public class ClassRequest {
 	String className;
-	Set<String> students;
+	long courseId;
+	Set<Long> studentIds;
 }

@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
 	Optional<Student> findByFullName(String fullName);
-	List<Student> findAllByFullName(Iterable<String> fullNames);
+	List<Student> findAllByFullNameIn(Iterable<String> fullNames);
 	boolean existsByFullName(String fullName);
 }

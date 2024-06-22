@@ -1,18 +1,23 @@
 package com.littlesunny.mapper;
 
-import com.littlesunny.dto.ClassDTO;
+import com.littlesunny.dto.request.ClassRequest;
+import com.littlesunny.dto.response.ClassResponse;
 import com.littlesunny.entity.Class;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface ClassMapper {
-	@Mapping(target = "students", ignore = true)
-	Class toClass(ClassDTO request);
 	
-	ClassDTO toClassDto(Class clazz);
+	@Mapping(target = "studentClasses", ignore = true)
+	Class toClass(ClassRequest request);
 	
-	@Mapping(target = "students", ignore = true)
-	void updateClass(@MappingTarget Class clazz, ClassDTO request);
+	@Mapping(source = "course.courseName", target = "courseName")
+	ClassResponse toClassDto(Class clazz);
+	
+	@Mapping(target = "studentClasses", ignore = true)
+	@Mapping(target = "course", ignore = true)
+	void updateClass(@MappingTarget Class clazz, ClassRequest request);
 }

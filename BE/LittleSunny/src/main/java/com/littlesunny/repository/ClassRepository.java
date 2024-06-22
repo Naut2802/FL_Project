@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface ClassRepository extends JpaRepository<Class, Long> {
 	boolean existsByClassName(String className);
 	Optional<Class> findByClassName(String className);
-	List<Class> findAllByClassName(Iterable<String> classNames);
+	List<Class> findAllByClassNameIn(Iterable<String> classNames);
 }

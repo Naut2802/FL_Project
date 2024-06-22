@@ -36,7 +36,7 @@ public class RoleService {
 		
 		var role = roleMapper.toRole(request);
 		
-		var permissions = permissionRepository.findAllByPermissionName(request.getPermissions());
+		var permissions = permissionRepository.findAllByPermissionNameIn(request.getPermissions());
 		role.setPermissions(new HashSet<>(permissions));
 		
 		roleRepository.save(role);
@@ -47,7 +47,7 @@ public class RoleService {
 		var role = roleRepository.findById(id).orElseThrow(() ->
 				new AppException(ErrorCode.ROLE_NOT_EXISTED));
 		
-		List<Permission> permissions = permissionRepository.findAllByPermissionName(request.getPermissions());
+		List<Permission> permissions = permissionRepository.findAllByPermissionNameIn(request.getPermissions());
 		role.setPermissions(new HashSet<>(permissions));
 		
 		roleMapper.updateRole(role, request);

@@ -32,7 +32,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class UserService {
-	private final RoleRepository roleRepository;
+	RoleRepository roleRepository;
 	UserRepository userRepository;
 	UserMapper userMapper;
 	PasswordEncoder passwordEncoder;
@@ -45,15 +45,12 @@ public class UserService {
 		
 		user.setPassword(encodePassword(user.getUsername(), user.getPassword()));
 		
-		Set<Role> roles = new HashSet<>();
-		var role = new Role();
-		role.setRoleName("USER");
-		roles.add(role);
+		var role = roleRepository.findByRoleName("USER").orElseThrow(() ->
+				new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION));
 		
-		user.setRoles(roles);
+		user.setRoles(new HashSet<>(List.of(role)));
 		
-		userRepository.save(user);
-		return userMapper.toUserResponse(user);
+		return userMapper.toUserResponse(userRepository.save(user));
 	}
 	
 	@PostAuthorize("returnObject.username == authentication.name")
@@ -81,7 +78,7 @@ public class UserService {
 		var user = userRepository.findById(userId).orElseThrow(()
 				-> new AppException(ErrorCode.USER_NOT_EXISTED));
 		
-		List<Role> roles = roleRepository.findAllByRoleName(request.getRoles());
+		List<Role> roles = roleRepository.findAllByRoleNameIn(request.getRoles());
 		
 		user.setRoles(new HashSet<>(roles));
 		return userMapper.toUserResponse(userRepository.save(user));

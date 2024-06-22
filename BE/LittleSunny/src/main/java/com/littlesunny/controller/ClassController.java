@@ -1,6 +1,7 @@
 package com.littlesunny.controller;
 
-import com.littlesunny.dto.ClassDTO;
+import com.littlesunny.dto.request.ClassRequest;
+import com.littlesunny.dto.response.ClassResponse;
 import com.littlesunny.dto.response.ResponseApi;
 import com.littlesunny.service.ClassService;
 import lombok.AccessLevel;
@@ -20,15 +21,15 @@ public class ClassController {
 	ClassService classService;
 	
 	@PostMapping
-	public ResponseApi<ClassDTO> createClass(@RequestBody ClassDTO request) {
-		return ResponseApi.<ClassDTO>builder()
+	public ResponseApi<ClassResponse> createClass(@RequestBody ClassRequest request) {
+		return ResponseApi.<ClassResponse>builder()
 				.result(classService.createClass(request))
 				.build();
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseApi<ClassDTO> updateClass(@PathVariable long id, @RequestBody ClassDTO request) {
-		return ResponseApi.<ClassDTO>builder()
+	public ResponseApi<ClassResponse> updateClass(@PathVariable long id, @RequestBody ClassRequest request) {
+		return ResponseApi.<ClassResponse>builder()
 				.result(classService.updateClass(id, request))
 				.build();
 	}
@@ -42,8 +43,8 @@ public class ClassController {
 	}
 	
 	@GetMapping
-	public ResponseApi<List<ClassDTO>> getClasses() {
-		return ResponseApi.<List<ClassDTO>>builder()
+	public ResponseApi<List<ClassResponse>> getClasses() {
+		return ResponseApi.<List<ClassResponse>>builder()
 				.result(classService.getClasses())
 				.build();
 	}
