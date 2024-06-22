@@ -37,7 +37,6 @@ public class ClassService {
 	private final CourseRepository courseRepository;
 	ClassRepository classRepository;
 	StudentRepository studentRepository;
-	StudentClassRepository studentClassRepository;
 	ClassMapper classMapper;
 	StudentClassMapper studentClassMapper;
 	
@@ -46,7 +45,32 @@ public class ClassService {
 				throw new AppException(ErrorCode.EXISTED);
 		
 		Class clazz = classMapper.toClass(request);
-		return classMapper.toClassDto(classRepository.save(clazz));
+		
+		clazz.setCourse(courseRepository.findById(request.getCourseId()).orElse(null));
+		
+		if (request.getStudentIds() != null) {
+			List<Student> students = studentRepository.findAllById(request.getStudentIds());
+			List<StudentClass> studentClassList = new ArrayList<>();
+			
+			students.forEach(student ->
+					studentClassList.add(new StudentClass(student, clazz, 0,
+							LocalDate.now(), clazz.getCourse().getCoursePrice(),
+							LocalDate.now().plusMonths(1), false))
+			);
+			
+			clazz.setStudentClasses(new HashSet<>(studentClassList));
+		}
+		
+		classRepository.save(clazz);
+		return ClassResponse.builder()
+				.className(clazz.getClassName())
+				.courseName(clazz.getCourse() == null ? null :
+						clazz.getCourse().getCourseName())
+				.students(clazz.getStudentClasses() == null ? null :
+						clazz.getStudentClasses()
+								.stream()
+								.map(studentClassMapper::toStudentClassResponse).toList())
+				.build();
 	}
 	
 	public ClassResponse updateClass(long id, ClassRequest request) {
@@ -70,9 +94,9 @@ public class ClassService {
 			);
 			
 			clazz.setStudentClasses(new HashSet<>(studentClassList));
-			classRepository.save(clazz);
 		}
 		
+		classRepository.save(clazz);
 		return ClassResponse.builder()
 				.className(clazz.getClassName())
 				.courseName(clazz.getCourse().getCourseName())

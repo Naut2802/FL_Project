@@ -13,6 +13,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"student_id", "class_id"})
+})
 public class StudentClass {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

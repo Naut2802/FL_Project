@@ -6,12 +6,11 @@ import com.littlesunny.entity.Class;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface ClassMapper {
-	
 	@Mapping(target = "studentClasses", ignore = true)
+	@Mapping(target = "course", ignore = true)
 	Class toClass(ClassRequest request);
 	
 	@Mapping(source = "course.courseName", target = "courseName")

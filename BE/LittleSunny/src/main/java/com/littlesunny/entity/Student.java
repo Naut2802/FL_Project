@@ -25,6 +25,6 @@ public class Student {
 	String phoneNumber;
 	String parentBankNumber;
 	
-	@OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "student", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	Set<StudentClass> studentClasses = new HashSet<>();
 }
