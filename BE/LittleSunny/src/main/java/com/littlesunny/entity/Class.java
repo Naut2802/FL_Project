@@ -23,6 +23,6 @@ public class Class {
 	
 	@ManyToOne @JoinColumn(name = "courseId")
 	Course course;
-	@OneToMany(mappedBy = "clazz", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "clazz", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	Set<StudentClass> studentClasses = new HashSet<>();
 }

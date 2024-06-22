@@ -37,7 +37,7 @@ public class StudentController {
 	public ResponseApi<?> deleteStudent(@PathVariable long id) {
 		studentService.deleteStudent(id);
 		return ResponseApi.builder()
-				.result("Class has been deleted")
+				.result("Student has been deleted")
 				.build();
 	}
 	
