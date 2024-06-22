@@ -11,6 +11,6 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PermissionRequest {
-	String name;
+	String permissionName;
 	String description;
 }

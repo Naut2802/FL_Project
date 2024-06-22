@@ -3,15 +3,18 @@ package com.littlesunny.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
+import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RoleRequest {
-	String roleName;
-	String description;
-	Set<String> permissions;
+public class StudentCreationRequest {
+	String fullName;
+	String address;
+	LocalDate dob;
+	String phoneNumber;
+	String parentBankNumber;
 }

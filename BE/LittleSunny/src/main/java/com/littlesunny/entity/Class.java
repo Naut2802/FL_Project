@@ -18,10 +18,11 @@ public class Class {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int id;
+	@Column(unique = true)
 	String className;
 	
 	@ManyToOne @JoinColumn(name = "courseId")
 	Course course;
-	@OneToMany(mappedBy = "clazz", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "clazz", cascade = CascadeType.ALL)
 	Set<StudentClass> studentClasses = new HashSet<>();
 }

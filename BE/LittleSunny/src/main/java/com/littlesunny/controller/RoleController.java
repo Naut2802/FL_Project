@@ -28,16 +28,16 @@ public class RoleController {
 				.build();
 	}
 	
-	@PutMapping("/{role}")
-	public ResponseApi<RoleResponse> updateRole(@PathVariable String role, @RequestBody RoleRequest request) {
+	@PutMapping("/{id}")
+	public ResponseApi<RoleResponse> updateRole(@PathVariable long id, @RequestBody RoleRequest request) {
 		return ResponseApi.<RoleResponse>builder()
-				.result(roleService.updateRole(role, request))
+				.result(roleService.updateRole(id, request))
 				.build();
 	}
 	
-	@DeleteMapping("/{role}")
-	public ResponseApi<String> deleteRole(@PathVariable String role) {
-		roleService.deleteRole(role);
+	@DeleteMapping("/{id}")
+	public ResponseApi<String> deleteRole(@PathVariable long id) {
+		roleService.deleteRole(id);
 		return ResponseApi.<String>builder()
 				.result("Role has been deleted.")
 				.build();

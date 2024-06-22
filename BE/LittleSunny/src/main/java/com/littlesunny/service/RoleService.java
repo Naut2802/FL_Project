@@ -31,27 +31,34 @@ public class RoleService {
 	RoleRepository roleRepository;
 	
 	public RoleResponse createRole(RoleRequest request) {
+		if (roleRepository.existsByRoleName(request.getRoleName()))
+			throw new AppException(ErrorCode.EXISTED);
+		
 		var role = roleMapper.toRole(request);
 		
-		var permissions = permissionRepository.findAllById(request.getPermissions());
+		var permissions = permissionRepository.findAllByPermissionNameIn(request.getPermissions());
 		role.setPermissions(new HashSet<>(permissions));
 		
 		roleRepository.save(role);
 		return roleMapper.toRoleResponse(role);
 	}
 	
-	public RoleResponse updateRole(String roleName, RoleRequest request) {
-		Role role = roleRepository.findById(roleName).orElseThrow(() -> new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION));
+	public RoleResponse updateRole(long id, RoleRequest request) {
+		var role = roleRepository.findById(id).orElseThrow(() ->
+				new AppException(ErrorCode.ROLE_NOT_EXISTED));
 		
-		List<Permission> permissions = permissionRepository.findAllById(request.getPermissions());
+		List<Permission> permissions = permissionRepository.findAllByPermissionNameIn(request.getPermissions());
 		role.setPermissions(new HashSet<>(permissions));
 		
 		roleMapper.updateRole(role, request);
 		return roleMapper.toRoleResponse(roleRepository.save(role));
 	}
 	
-	public void deleteRole(String role) {
-		roleRepository.deleteById(role);
+	public void deleteRole(long id) {
+		if (!roleRepository.existsById(id))
+			throw new AppException(ErrorCode.ROLE_NOT_EXISTED);
+		
+		roleRepository.deleteById(id);
 	}
 	
 	public List<RoleResponse> getRoles() {

@@ -32,28 +32,25 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class UserService {
-	private final RoleRepository roleRepository;
+	RoleRepository roleRepository;
 	UserRepository userRepository;
 	UserMapper userMapper;
 	PasswordEncoder passwordEncoder;
 	
 	public UserResponse createUser(UserCreationRequest request) {
-		User user = userMapper.toUser(request);
-		
 		if(userRepository.existsByUsername(request.getUsername()))
 			throw new AppException(ErrorCode.USER_EXISTED);
 		
+		var user = userMapper.toUser(request);
+		
 		user.setPassword(encodePassword(user.getUsername(), user.getPassword()));
 		
-		Set<Role> roles = new HashSet<>();
-		Role role = new Role();
-		role.setName("USER");
-		roles.add(role);
+		var role = roleRepository.findByRoleName("USER").orElseThrow(() ->
+				new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION));
 		
-		user.setRoles(roles);
+		user.setRoles(new HashSet<>(List.of(role)));
 		
-		userRepository.save(user);
-		return userMapper.toUserResponse(user);
+		return userMapper.toUserResponse(userRepository.save(user));
 	}
 	
 	@PostAuthorize("returnObject.username == authentication.name")
@@ -68,7 +65,8 @@ public class UserService {
 	
 	@PostAuthorize("returnObject.username == authentication.name")
 	public UserResponse updateUser(String userId, UserUpdateRequest request) {
-		User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+		var user = userRepository.findById(userId).orElseThrow(()
+				-> new AppException(ErrorCode.USER_NOT_EXISTED));
 		
 		userMapper.updateUser(user, request);
 		user.setPassword(encodePassword(user.getUsername(), user.getPassword()));
@@ -77,9 +75,10 @@ public class UserService {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	public UserResponse authorizeUser(String userId, AuthorizeUserRequest request) {
-		User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+		var user = userRepository.findById(userId).orElseThrow(()
+				-> new AppException(ErrorCode.USER_NOT_EXISTED));
 		
-		List<Role> roles = roleRepository.findAllById(request.getRoles());
+		List<Role> roles = roleRepository.findAllByRoleNameIn(request.getRoles());
 		
 		user.setRoles(new HashSet<>(roles));
 		return userMapper.toUserResponse(userRepository.save(user));
@@ -87,7 +86,8 @@ public class UserService {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	public UserResponse getUser(String userId) {
-		return userMapper.toUserResponse(userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
+		return userMapper.toUserResponse(userRepository.findById(userId).orElseThrow(()
+				-> new AppException(ErrorCode.USER_NOT_EXISTED)));
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
@@ -97,6 +97,9 @@ public class UserService {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	public void deleteUser(String userId) {
+		if(!userRepository.existsById(userId))
+			throw new AppException(ErrorCode.USER_NOT_EXISTED);
+		
 		userRepository.deleteById(userId);
 	}
 	
