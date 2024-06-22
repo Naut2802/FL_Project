@@ -17,11 +17,16 @@ function LoginForm() {
         const res = await authorizedAxiosInstance.post(`${API_ROOT}/api/v1/auth/login`, data);
         localStorage.setItem('accessToken', res.data.result.accessToken);
         localStorage.setItem('refreshToken', res.data.result.refreshToken);
+
         const res2 = await authorizedAxiosInstance.get(`${API_ROOT}/api/v1/user/my-info`);
-        const roleInfo = res2.data.result.roles[0].name;
-        console.log(roleInfo);
+        const userInfo = {
+            id: res2.data.result.id,
+            email: res2.data.result.email,
+        };
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+        const roleInfo = res2.data.result.roles[0].roleName;
         if (roleInfo === 'ADMIN') {
-            navigate('/add');
+            navigate('/news');
         } else {
             navigate('/home');
         }

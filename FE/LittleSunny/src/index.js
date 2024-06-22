@@ -13,9 +13,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <BrowserRouter>
         <GlobalStyles>
-            <React.StrictMode>
-                <App />
-            </React.StrictMode>
+            {/* <React.StrictMode> */}
+            <App />
+            {/* </React.StrictMode> */}
         </GlobalStyles>
         <ToastContainer position="bottom-left" theme="colored" />
     </BrowserRouter>,

@@ -1,5 +1,86 @@
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { handleLogoutAPI } from '~/apis';
+import authorizedAxiosInstance from '~/utils/authorizedAxios';
+import { API_ROOT } from '~/utils/constants';
+
 function News() {
-    return <h1>News Page</h1>;
+    const [user, setUser] = useState(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await authorizedAxiosInstance.get(`${API_ROOT}/api/v1/user/my-info`);
+            setUser(res.data.result);
+        };
+        fetchData();
+    }, []);
+
+    const handleLogut = async () => {
+        await handleLogoutAPI();
+        toast.info('Bạn đã đăng xuất!!!');
+        navigate('/home');
+    };
+
+    if (!user) {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 2,
+                    width: '100vw',
+                    height: '100vh',
+                    background: 'white',
+                }}
+            >
+                <CircularProgress />
+                <Typography>Loading dashboard user...</Typography>
+            </Box>
+        );
+    }
+
+    return (
+        <Box
+            sx={{
+                maxWidth: '1120px',
+                marginTop: '1em',
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                padding: '0 1em',
+            }}
+        >
+            <Alert severity="info" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
+                Đây là trang Dashboard sau khi user:&nbsp;
+                <Typography variant="span" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>
+                    {user?.email}
+                </Typography>
+                &nbsp; đăng nhập thành công thì mới cho truy cập vào.
+            </Alert>
+
+            <Button
+                type="button"
+                variant="contained"
+                color="info"
+                size="large"
+                sx={{ mt: 2, maxWidth: 'min-content', alignSelf: 'flex-end' }}
+                onClick={handleLogut}
+            >
+                Logout
+            </Button>
+
+            <Divider sx={{ my: 2 }} />
+        </Box>
+    );
 }
 
 export default News;
