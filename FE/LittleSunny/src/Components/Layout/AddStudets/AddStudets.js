@@ -4,6 +4,11 @@ import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
 function AddStudent() {
+    // const dateInput = document.getElementById('registrationDate');
+    // const today = new Date();
+    // const formattedDate = today.toISOString().substr(0, 10);
+    // dateInput.value = formattedDate;
+
     return (
         <div className={cx('wrapper')}>
             <form action="" className="row">
@@ -20,6 +25,9 @@ function AddStudent() {
                 <div className={cx('input-box')}>
                     <input type="text" placeholder="Địa Chỉ" required />
                 </div>
+                {/* <div className={cx('input-box')}>
+                    <input type="date" disabled id="registrationDate" placeholder="Ngày Đăng Ký" required />
+                </div>
                 <div className={cx('input-box')}>
                     <select className="form-select" defaultValue="">
                         <option selected>Lớp Học</option>
@@ -27,10 +35,11 @@ function AddStudent() {
                         <option value="2">Lớp Học 2</option>
                         <option value="3">Lớp Học 3</option>
                     </select>
-                </div>
+                </div> */}
                 <div className={cx('input-box', 'col-6')}>
                     <input type="text" placeholder="Học Phí" required />
                 </div>
+
                 <div className={cx('input-box', 'col-6')}>
                     <input type="text" placeholder="Số Tài Khoản" required />
                 </div>

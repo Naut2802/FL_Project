@@ -11,6 +11,7 @@ import Contact from './pages/Contact';
 import DSHocVien from './Components/Layout/DSHocVien/DSHocVien';
 import AddStudent from './Components/Layout/AddStudets/AddStudets';
 import DSLopKhoaHoc from './Components/Layout/DSLop_KhoaHoc/DSLopKhoaHoc';
+import DSHocVienLop from './Components/Layout/HocVienLop/HocVien_Lop';
 import ThongKe from './Components/Layout/ThongKe/ThongKe';
 import App from './App';
 // import Home from './pages/Home';
@@ -29,7 +30,8 @@ root.render(
                         <Route path="contact" element={<Contact />} />
                         <Route path="student" element={<DSHocVien />} />
                         <Route path="addS" element={<AddStudent />} />
-                        <Route path="classes" element={<DSLopKhoaHoc />} />
+                        <Route path="course" element={<DSLopKhoaHoc />} />
+                        <Route path="classes" element={<DSHocVienLop />} />
                         <Route path="thongke" element={<ThongKe />} />
                     </Route>
                 </Routes>

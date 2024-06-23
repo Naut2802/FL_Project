@@ -45,10 +45,16 @@ function SideBar() {
                                     <span className="ms-3 d-none d-sm-inline">Danh Sách Học Viên</span>
                                 </Link>
                             </li>
-                            <li className="nav-item fs-4 my-1 my- py-2 py-sm-0">
+                            <li className="nav-item fs-4 my-1 py-2 py-sm-0">
                                 <Link to="classes" className="nav-link  text-black">
-                                    <i className="bi bi-card-checklist"></i>
+                                    <i className="bi bi-list"></i>
                                     <span className="ms-3 d-none d-sm-inline">Danh Sách Lớp</span>
+                                </Link>
+                            </li>
+                            <li className="nav-item fs-4 my-1 my- py-2 py-sm-0">
+                                <Link to="course" className="nav-link  text-black">
+                                    <i className="bi bi-card-checklist"></i>
+                                    <span className="ms-3 d-none d-sm-inline">Danh Sách Khóa</span>
                                 </Link>
                             </li>
                             <li className="nav-item fs-4 my-1 py-2 py-sm-0">

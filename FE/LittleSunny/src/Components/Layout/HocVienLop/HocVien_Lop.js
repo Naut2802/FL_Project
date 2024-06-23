@@ -7,39 +7,16 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { Box, Button, Modal, Typography, Input } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Typography } from '@mui/material';
 import React from 'react';
-
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-
-function DSHocVien() {
-    const columns: GridColDef[] = [
-        { field: 'id', headerName: 'ID', width: 200 },
-        { field: 'khoa', headerName: 'Khóa', width: 230 },
-        { field: 'lop', headerName: 'Lớp', width: 230 },
-    ];
-
-    const rows = [
-        { id: 1, khoa: 'Khóa ...1...', lop: 'Lớp ...1...' },
-        { id: 2, khoa: 'Khóa ...2...', lop: 'Lớp ...2...' },
-        { id: 3, khoa: 'Khóa ...3...', lop: 'Lớp ...3...' },
-        { id: 4, khoa: 'Khóa ...4...', lop: 'Lớp ...4...' },
-        { id: 5, khoa: 'Khóa ...5...', lop: 'Lớp ...5...' },
-        { id: 6, khoa: 'Khóa ...6...', lop: 'Lớp ...6...' },
-        { id: 7, khoa: 'Khóa ...7...', lop: 'Lớp ...7...' },
-        { id: 8, khoa: 'Khóa ...8...', lop: 'Lớp ...8...' },
-        { id: 9, khoa: 'Khóa ...9...', lop: 'Lớp ...9...' },
-        { id: 10, khoa: 'Khóa ...10...', lop: 'Lớp ...10...' },
-        { id: 11, khoa: 'Khóa ...11...', lop: 'Lớp ...11...' },
-        { id: 12, khoa: 'Khóa ...12...', lop: 'Lớp ...12...' },
-    ];
-
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+function HocVien_Lop() {
     const style = {
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 800,
+        width: 400,
         bgcolor: 'background.paper',
         border: '2px solid #000',
         boxShadow: 24,
@@ -49,14 +26,23 @@ function DSHocVien() {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
+    const [age, setAge] = React.useState('');
+
+    const handleChange = (event: SelectChangeEvent) => {
+        setAge(event.target.value);
+    };
+
     return (
         <TableContainer sx={{ width: 1200, marginTop: 5, marginLeft: 10 }} component={Paper}>
-            <h1 className="mt-3" align="center">
-                DANH SÁCH HỌC VIÊN
-            </h1>
+            <div className="container row my-4 text-center">
+                <h1 className="col-10">DANH SÁCH LỚP</h1>
+                <input className="col-2 rounded-5" type="text" placeholder="Tìm kiếm" />
+            </div>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
+                        <TableCell sx={{ fontSize: 20 }}>Khóa</TableCell>
+                        <TableCell sx={{ fontSize: 20 }}>Lớp</TableCell>
                         <TableCell sx={{ fontSize: 20 }} align="center">
                             Họ Tên
                         </TableCell>
@@ -64,16 +50,10 @@ function DSHocVien() {
                             Ngày Sinh
                         </TableCell>
                         <TableCell sx={{ fontSize: 20 }} align="center">
-                            Địa Chỉ
-                        </TableCell>
-                        <TableCell sx={{ fontSize: 20 }} align="center">
                             Số ĐT
                         </TableCell>
                         <TableCell sx={{ fontSize: 20 }} align="center">
-                            TT Phụ Huynh
-                        </TableCell>
-                        <TableCell sx={{ fontSize: 20 }} align="center">
-                            Học Phí
+                            Điểm
                         </TableCell>
                         <TableCell sx={{ fontSize: 20 }} align="center">
                             Trạng Thái
@@ -93,28 +73,26 @@ function DSHocVien() {
                         }}
                     >
                         <TableCell sx={{ fontSize: 15 }} component="th" scope="row">
+                            Khóa ...1...
+                        </TableCell>
+                        <TableCell sx={{ fontSize: 15 }}>Lớp ...1...</TableCell>
+                        <TableCell sx={{ fontSize: 15 }} align="center">
                             Nguyễn Văn A
                         </TableCell>
                         <TableCell sx={{ fontSize: 15 }} align="center">
-                            20/02/2010
-                        </TableCell>
-                        <TableCell sx={{ fontSize: 15 }} align="center">
-                            153/153 abc Q.B Tp.abcc
+                            20/10/2010
                         </TableCell>
                         <TableCell sx={{ fontSize: 15 }} align="center">
                             xxxx .xxx .xxx
                         </TableCell>
                         <TableCell sx={{ fontSize: 15 }} align="center">
-                            Phụ Huynh A
-                        </TableCell>
-                        <TableCell sx={{ fontSize: 15 }} align="center">
-                            4.000.0000
+                            8
                         </TableCell>
                         <TableCell sx={{ fontSize: 15 }} align="center">
                             Chưa thanh toán
                         </TableCell>
                         <TableCell sx={{ fontSize: 15 }} align="center">
-                            <Button onClick={handleOpen}>Chọn Lớp</Button>
+                            <Button onClick={handleOpen}>Học Phí</Button>
                             <Modal
                                 open={open}
                                 onClose={handleClose}
@@ -122,38 +100,27 @@ function DSHocVien() {
                                 aria-describedby="modal-modal-description"
                             >
                                 <Box sx={style}>
-                                    <Typography
-                                        id="modal-modal-title"
-                                        variant="h6"
-                                        component="h2"
-                                        className="text-center"
-                                    >
-                                        <h3>CHỌN LỚP</h3>
+                                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                                        Học Phí
                                     </Typography>
                                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                        <div className="d-flex justify-content-end my-3">
-                                            <Input
-                                                type="text"
-                                                placeholder="Tìm kiếm"
-                                                className="border rounded-2"
-                                            ></Input>
-                                        </div>
-                                        <div style={{ height: 400, width: '100%' }}>
-                                            <DataGrid
-                                                rows={rows}
-                                                columns={columns}
-                                                initialState={{
-                                                    pagination: {
-                                                        paginationModel: { page: 0, pageSize: 5 },
-                                                    },
-                                                }}
-                                                pageSizeOptions={[5, 10]}
-                                                checkboxSelection
-                                            />
-                                            <Button variant="outlined" className="float-end mt-4 ">
-                                                Đồng Ý
-                                            </Button>
-                                        </div>
+                                        <FormControl fullWidth className="mt-2">
+                                            <InputLabel id="demo-simple-select-label">Chọn</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={age}
+                                                label="Age"
+                                                onChange={handleChange}
+                                            >
+                                                <MenuItem value={10}>Chưa Thanh Toán</MenuItem>
+                                                <MenuItem value={20}>Đã Thanh Toán</MenuItem>
+                                                <MenuItem value={30}>Nợ Học Phí</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                        <Button variant="outlined" className="mt-5 float-end" type="submit">
+                                            Đồng ý
+                                        </Button>
                                     </Typography>
                                 </Box>
                             </Modal>
@@ -168,4 +135,4 @@ function DSHocVien() {
     );
 }
 
-export default DSHocVien;
+export default HocVien_Lop;
