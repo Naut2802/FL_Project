@@ -10,11 +10,20 @@ import Stack from '@mui/material/Stack';
 // import Table from 'react-bootstrap/Table';
 import classNames from 'classnames/bind';
 import styles from './DSLopKhoaHoc.module.scss';
+import { Breadcrumbs, Link } from '@mui/material';
 
 const cx = classNames.bind(styles);
 function DSLopKhoaHoc() {
     return (
-        <div className="container">
+        <div>
+            <Breadcrumbs aria-label="breadcrumb" className="mt-5 fs-4">
+                <Link underline="hover" color="inherit" href="/home">
+                    Trang Chủ
+                </Link>
+                <Link underline="hover" color="inherit" href="/home/course">
+                    Thêm Khóa - Lớp Học
+                </Link>
+            </Breadcrumbs>
             <div className="d-flex justify-content-center">
                 <div className={cx('wrapper', 'my-4')}>
                     <form action="">

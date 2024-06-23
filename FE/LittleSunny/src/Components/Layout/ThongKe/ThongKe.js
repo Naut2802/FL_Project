@@ -7,10 +7,19 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import { Breadcrumbs, Link } from '@mui/material';
 
 function ThongKe() {
     return (
         <div>
+            <Breadcrumbs aria-label="breadcrumb" className="mt-5 fs-4">
+                <Link underline="hover" color="inherit" href="/home">
+                    Trang Chủ
+                </Link>
+                <Link underline="hover" color="inherit" href="/home/thongke">
+                    Thống Kê
+                </Link>
+            </Breadcrumbs>
             <TableContainer sx={{ width: 1200, marginTop: 5, marginLeft: 10 }} component={Paper}>
                 <div className="container row my-4 text-center">
                     <h1 className="col-10">THỐNG KÊ HỌC VIÊN</h1>

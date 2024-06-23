@@ -4,10 +4,8 @@ import SideBar from '~/Components/Layout/SideBar/SideBar';
 
 function Home() {
     return (
-        <div className="">
+        <div>
             <SideBar />
-
-            {/* <Footer /> */}
         </div>
     );
 }

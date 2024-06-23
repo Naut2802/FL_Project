@@ -1,17 +1,18 @@
 import logo from '~/LittleSunny.png';
 import { Link } from 'react-router-dom';
 import './SideBar.module.scss';
+import * as React from 'react';
 
 function SideBar() {
     return (
-        <div className="container-fluid">
-            <div className="row">
+        <div className="">
+            <div className="container-fluid col-auto">
                 <div className="bg-white border rounded-3 min-vh-100 d-flex justify-content-between flex-column">
                     <div>
                         <Link
                             to="/home"
                             className="text-decoration-none text-black
-                        d-flex justify-content-center"
+                            d-flex justify-content-center"
                         >
                             <img
                                 src={logo}
