@@ -17,8 +17,12 @@ function News() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await authorizedAxiosInstance.get(`${API_ROOT}/api/v1/user/my-info`);
-            setUser(res.data.result);
+            try {
+                const res = await authorizedAxiosInstance.get(`${API_ROOT}/api/v1/user/my-info`);
+                setUser(res.data.result);
+            } catch (error) {
+                console.log(error);
+            }
         };
         fetchData();
     }, []);
