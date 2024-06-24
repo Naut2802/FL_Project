@@ -6,6 +6,7 @@ import com.littlesunny.exception.ErrorCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.jwt.JwtException;
@@ -13,6 +14,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 import java.io.IOException;
 
+@Slf4j
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
@@ -21,6 +23,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		
 		if (authException.getCause() instanceof JwtException && authException.getCause().getMessage().equals("Token expired")) {
 			errorCode = ErrorCode.TOKEN_EXPIRED;
+			log.info(authException.getCause().getMessage());
 		}
 		
 		response.setStatus(errorCode.getStatusCode().value());

@@ -62,13 +62,13 @@ public class AuthenticationService {
 	@Value("${jwt.refresh-token-valid-duration}")
 	long REFRESH_TOKEN_VALID_DURATION;
 	
-	public IntrospectResponse introspect(IntrospectRequest request) {
+	public IntrospectResponse introspect(IntrospectRequest request, boolean isRefresh) {
 		var token = request.getToken();
 		boolean isValid = true;
 		ErrorCode errorCode = null;
 		
 		try {
-			verifyToken(token, false);
+			verifyToken(token, isRefresh);
 		} catch (AppException e) {
 			errorCode = e.getErrorCode();
 			isValid = false;
@@ -111,15 +111,16 @@ public class AuthenticationService {
 	@Transactional
 	public void logout(LogoutRequest request) throws ParseException, JOSEException {
 		try {
-			SignedJWT signedJWT = verifyToken(request.getAccessToken(), false);
-			
-			String jwtId = signedJWT.getJWTClaimsSet().getJWTID();
-			var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-			
-			InvalidatedToken invalidatedToken =
-					invalidatedTokenRepository.save(InvalidatedToken.builder()
-							.id(jwtId)
-							.expiryTime(expiryTime).build());
+			if (request.getAccessToken() != null) {
+				SignedJWT signedJWT = verifyToken(request.getAccessToken(), false);
+				
+				String jwtId = signedJWT.getJWTClaimsSet().getJWTID();
+				var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+				
+				invalidatedTokenRepository.save(InvalidatedToken.builder()
+						.id(jwtId)
+						.expiryTime(expiryTime).build());
+			}
 			
 			redisTokenRepository.deleteByToken(request.getRefreshToken());
 		} catch (Exception e) {
@@ -132,9 +133,8 @@ public class AuthenticationService {
 		SignedJWT signedJWT = null;
 		try {
 			signedJWT = verifyToken(request.getToken(), true);
-		} catch (AppException e) {
-			if (e.getErrorCode().getStatusCode().isSameCodeAs(HttpStatus.GONE))
-				throw new AppException(ErrorCode.UNAUTHENTICATED);
+		} catch (Exception e) {
+			throw new AppException(ErrorCode.UNAUTHENTICATED);
 		}
 		
 		User user = userRepository.findByUsername(signedJWT.getJWTClaimsSet().getSubject())

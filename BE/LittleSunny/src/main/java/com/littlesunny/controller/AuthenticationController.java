@@ -26,9 +26,9 @@ public class AuthenticationController {
 	AuthenticationService authenticationService;
 	
 	@PostMapping("token")
-	public ResponseApi<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
+	public ResponseApi<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request, boolean isRefresh) throws ParseException, JOSEException {
 		return ResponseApi.<IntrospectResponse>builder()
-				.result(authenticationService.introspect(request))
+				.result(authenticationService.introspect(request, isRefresh))
 				.build();
 	}
 	

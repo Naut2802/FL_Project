@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -31,20 +32,22 @@ public class SecurityConfig {
 	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.authorizeHttpRequests(request -> request
-				.requestMatchers("/api/v1/auth/*").permitAll()
-				.requestMatchers(HttpMethod.POST, "/api/v1/user").permitAll()
-				.anyRequest().authenticated()
-		);
+		httpSecurity
+				.httpBasic(AbstractHttpConfigurer::disable)
+				.authorizeHttpRequests(request -> request
+					.requestMatchers("/api/v1/auth/*").permitAll()
+					.requestMatchers(HttpMethod.POST, "/api/v1/user").permitAll()
+					.requestMatchers("/api/v1/**").authenticated())
+				.oauth2ResourceServer(oauth2 -> {
+					oauth2.jwt(jwt -> jwt
+							.decoder(customJwtDecoder)
+							.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+							.authenticationEntryPoint(new JwtAuthenticationEntryPoint());
+				})
+				.sessionManagement(session -> session
+						.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.csrf(AbstractHttpConfigurer::disable);
 		
-		httpSecurity.oauth2ResourceServer(oauth2 -> {
-			oauth2.jwt(jwt -> jwt
-					.decoder(customJwtDecoder)
-					.jwtAuthenticationConverter(jwtAuthenticationConverter()))
-					.authenticationEntryPoint(new JwtAuthenticationEntryPoint());
-		});
-		
-		httpSecurity.csrf(AbstractHttpConfigurer::disable);
 		return httpSecurity.build();
 	}
 	
@@ -55,6 +58,7 @@ public class SecurityConfig {
 		configuration.addAllowedOrigin("http://localhost:3000");
 		configuration.addAllowedMethod("*");
 		configuration.addAllowedHeader("*");
+		configuration.setAllowCredentials(true);
 		
 		UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
 		urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", configuration);
