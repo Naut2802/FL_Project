@@ -119,7 +119,7 @@ function ThongKe() {
                         <Input type="date" />
                     </div>
                     <Bar options={options_2} data={data_2} />
-                    <div className="float-end fs-5 m-2">.....</div>
+                    <div className="float-end fs-5 m-2">Tổng Ha</div>
                 </div>
             </div>
         </div>
