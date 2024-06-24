@@ -6,8 +6,8 @@ import styles from './Footer.module.scss';
 const cx = classNames.bind(styles);
 function Footer() {
     return (
-        <footer className={cx('wrapper', 'row w-100')}>
-            <div className="row">
+        <footer className={cx('wrapper')}>
+            <div className="row w-100">
                 <div className={cx('title-footer', 'col-6 ')}>
                     <ul className={cx('ulCss')}>
                         <h3 className={cx('title-name')}>Little Sunny Education Center </h3>
