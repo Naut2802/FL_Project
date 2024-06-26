@@ -2,15 +2,10 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { handleLogoutAPI, refreshTokenAPI } from '~/apis';
 
-let authorizedAxiosInstance = axios.create({
-    baseURL: 'http://localhost:2802/api/v1',
-    headers: {
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-    }
-});
+let authorizedAxiosInstance = axios.create();
+
 authorizedAxiosInstance.defaults.timeout = 1000 * 60 * 10;
+authorizedAxiosInstance.defaults.withCredentials = true;
 
 let isRefreshing = false;
 let refreshSubscribers = [];
@@ -18,12 +13,13 @@ let refreshSubscribers = [];
 authorizedAxiosInstance.interceptors.request.use(
     (config) => {
         const accessToken = localStorage.getItem('accessToken');
-        const refreshToken = localStorage.getItem('refreshToken');
+        // const refreshToken = localStorage.getItem('refreshToken');
         if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
-        } else if (refreshToken) {
-            config.headers.Authorization = `Bearer ${refreshToken}`;
-        }
+        } 
+        // else if (refreshToken) {
+        //     config.headers.Authorization = `Bearer ${refreshToken}`;
+        // }
 
         return config;
     },
@@ -61,12 +57,10 @@ authorizedAxiosInstance.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                localStorage.removeItem('accessToken');
-                const refreshTokenFromStorage = localStorage.getItem('refreshToken');
-                const response = await refreshTokenAPI(refreshTokenFromStorage);
-                const { accessToken, refreshToken } = response.data.result;
+                const response = await refreshTokenAPI(localStorage.getItem('userId'));
+                const { userId, accessToken  } = response.data.result;
                 localStorage.setItem('accessToken', accessToken);
-                localStorage.setItem('refreshToken', refreshToken);
+                localStorage.setItem('userId', userId);
 
                 // Retry original request
                 refreshSubscribers.forEach((callback) => callback(accessToken));
@@ -74,8 +68,10 @@ authorizedAxiosInstance.interceptors.response.use(
 
                 return authorizedAxiosInstance(originalRequest);
             } catch (err) {
-                // await handleLogoutAPI();
-                // window.location.replace('/login');
+                await handleLogoutAPI();
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('userId');
+                window.location.replace('/login');
                 // toast.info('Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại!!!');
                 return Promise.reject(err);
             } finally {
@@ -84,8 +80,10 @@ authorizedAxiosInstance.interceptors.response.use(
         }
 
         if (status === 401) {
-            await handleLogoutAPI();
-            window.location.replace('/login');
+            // await handleLogoutAPI();
+            // window.location.replace('/login');
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('userId');
             toast.info('Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại!!!');
         }
 

@@ -29,6 +29,8 @@ function News() {
 
     const handleLogut = async () => {
         await handleLogoutAPI();
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userId');
         toast.info('Bạn đã đăng xuất!!!');
         navigate('/home');
     };

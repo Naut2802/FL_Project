@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class GlobalExceptionHandler {
 	@ExceptionHandler(value = Exception.class)
-	ResponseEntity<ResponseApi> runtimeExceptionHandling(RuntimeException exception) {
+	ResponseEntity<ResponseApi> exceptionHandling(Exception exception) {
 		log.error("Exception: ", exception);
 		ResponseApi apiResponse = new ResponseApi();
 		
 		apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
-		apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
+		apiResponse.setMessage(exception.getMessage());
 		
 		return ResponseEntity.badRequest().body(apiResponse);
 	}

@@ -1,56 +1,49 @@
 package com.littlesunny.controller;
 
-import com.littlesunny.dto.request.IntrospectRequest;
-import com.littlesunny.dto.request.LoginRequest;
-import com.littlesunny.dto.request.LogoutRequest;
-import com.littlesunny.dto.request.RefreshRequest;
+import com.littlesunny.dto.request.*;
 import com.littlesunny.dto.response.AuthenticationResponse;
 import com.littlesunny.dto.response.IntrospectResponse;
 import com.littlesunny.dto.response.ResponseApi;
+import com.littlesunny.dto.response.UserResponse;
 import com.littlesunny.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 
 @RestController
-@RequestMapping("api/v1/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class AuthenticationController {
 	AuthenticationService authenticationService;
 	
-	@PostMapping("token")
-	public ResponseApi<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request, boolean isRefresh) throws ParseException, JOSEException {
-		return ResponseApi.<IntrospectResponse>builder()
-				.result(authenticationService.introspect(request, isRefresh))
+	@PostMapping("sign-up")
+	public ResponseApi<UserResponse> register(@RequestBody UserCreationRequest request) throws ParseException, JOSEException {
+		return ResponseApi.<UserResponse>builder()
+				.result(authenticationService.register(request))
 				.build();
 	}
 	
-	@PostMapping("/login")
-	public ResponseApi<AuthenticationResponse> authenticate(@RequestBody LoginRequest request) {
+	@PostMapping("sign-in")
+	public ResponseApi<AuthenticationResponse> authenticate(HttpServletResponse response, @RequestBody LoginRequest request) throws NoSuchAlgorithmException {
 		return ResponseApi.<AuthenticationResponse>builder()
-				.result(authenticationService.authenticate(request))
+				.result(authenticationService.authenticate(response, request))
 				.build();
 	}
 	
-	@DeleteMapping("/logout")
-	public ResponseApi<String> authenticate(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
-		authenticationService.logout(request);
-		return ResponseApi.<String>builder()
-				.result("Has been logged out")
-				.build();
-	}
-	
-	@PutMapping("/refresh")
-	public ResponseApi<AuthenticationResponse> authenticate(@RequestBody RefreshRequest request) throws ParseException, JOSEException {
+	@PutMapping("refresh-token")
+	public ResponseApi<AuthenticationResponse> authenticate(HttpServletRequest request, HttpServletResponse response, @RequestBody RefreshRequest userId) throws ParseException, JOSEException, NoSuchAlgorithmException {
 		return ResponseApi.<AuthenticationResponse>builder()
-				.result(authenticationService.refreshToken(request))
+				.result(authenticationService.refreshToken(request, response, userId))
 				.build();
 	}
 }

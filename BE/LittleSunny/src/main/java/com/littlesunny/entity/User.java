@@ -27,8 +27,8 @@ public class User {
 	String firstName;
 	String lastName;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	Set<Role> roles;
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	Set<RefreshTokenWhiteList> tokens;
 }

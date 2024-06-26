@@ -2,16 +2,11 @@ import authorizedAxiosInstance from '~/utils/authorizedAxios';
 import { API_ROOT } from '~/utils/constants';
 
 export const handleLogoutAPI = async () => {
-    const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken');
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userInfo');
-    return await authorizedAxiosInstance.delete(`${API_ROOT}/api/v1/auth/logout`, {
-        data: { accessToken, refreshToken },
-    });
+    return await authorizedAxiosInstance.delete(`${API_ROOT}/api/auth/logout`);
 };
 
-export const refreshTokenAPI = async (refreshToken) => {
-    return await authorizedAxiosInstance.put(`${API_ROOT}/api/v1/auth/refresh`, { token: refreshToken });
+export const refreshTokenAPI = async (userId) => {
+    return await authorizedAxiosInstance.put(`${API_ROOT}/api/auth/refresh-token`, { 
+        userId: userId
+    });
 };

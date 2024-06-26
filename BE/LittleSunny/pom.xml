@@ -21,7 +21,7 @@
         <spotless.version>2.43.0</spotless.version>
 	</properties>
 	<dependencies>
-		<dependency>
+        <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
