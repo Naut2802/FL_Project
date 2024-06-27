@@ -47,12 +47,7 @@ public class AuthenticationService {
 	PasswordEncoder passwordEncoder;
 	RoleRepository roleRepository;
 	KeyUtils keyUtils;
-	KeyService keyService;
 	
-	
-	@NonFinal
-	@Value("${jwt.access-token-valid-duration}")
-	long ACCESS_TOKEN_VALID_DURATION;
 	@NonFinal
 	@Value("${jwt.refresh-token-valid-duration}")
 	long REFRESH_TOKEN_VALID_DURATION;
@@ -101,7 +96,7 @@ public class AuthenticationService {
 	}
 	
 	@Transactional
-	public AuthenticationResponse refreshToken(HttpServletRequest request, HttpServletResponse response, RefreshRequest refreshRequest) throws ParseException, JOSEException, NoSuchAlgorithmException {
+	public AuthenticationResponse refreshToken(HttpServletRequest request, HttpServletResponse response, RefreshRequest refreshRequest) throws NoSuchAlgorithmException {
 		User user = userRepository.findById(refreshRequest.getUserId())
 				.orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 		
@@ -146,7 +141,7 @@ public class AuthenticationService {
 		Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken.getTokenValue());
 		refreshTokenCookie.setHttpOnly(true);
 		refreshTokenCookie.setSecure(true);
-		refreshTokenCookie.setMaxAge((int) REFRESH_TOKEN_VALID_DURATION); // in seconds
+		refreshTokenCookie.setMaxAge((int) REFRESH_TOKEN_VALID_DURATION + (60 * 60 * 48)); // in seconds
 		response.addCookie(refreshTokenCookie);
 	}
 	

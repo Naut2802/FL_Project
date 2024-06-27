@@ -1,6 +1,5 @@
 package com.littlesunny.dto.response;
 
-import com.littlesunny.entity.Class;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,9 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CourseResponse {
-	long courseId;
-	String courseName;
-	double coursePrice;
-	List<ClassResponseForCourse> classes;
+public class ClassResponseForCourse {
+	long classId;
+	String className;
+	int limitQuantity;
 }

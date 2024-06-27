@@ -1,7 +1,8 @@
 package com.littlesunny.controller;
 
-import com.littlesunny.dto.StudentDTO;
+import com.littlesunny.dto.request.StudentRequest;
 import com.littlesunny.dto.response.ResponseApi;
+import com.littlesunny.dto.response.StudentResponse;
 import com.littlesunny.service.StudentService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -20,15 +21,15 @@ public class StudentController {
 	StudentService studentService;
 	
 	@PostMapping
-	public ResponseApi<StudentDTO> createStudent(@RequestBody StudentDTO request) {
-		return ResponseApi.<StudentDTO>builder()
+	public ResponseApi<StudentResponse> createStudent(@RequestBody StudentRequest request) {
+		return ResponseApi.<StudentResponse>builder()
 				.result(studentService.createStudent(request))
 				.build();
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseApi<StudentDTO> updateStudent(@PathVariable long id, @RequestBody StudentDTO request) {
-		return ResponseApi.<StudentDTO>builder()
+	public ResponseApi<StudentResponse> updateStudent(@PathVariable long id, @RequestBody StudentRequest request) {
+		return ResponseApi.<StudentResponse>builder()
 				.result(studentService.updateStudent(id, request))
 				.build();
 	}
@@ -42,9 +43,16 @@ public class StudentController {
 	}
 	
 	@GetMapping
-	public ResponseApi<List<StudentDTO>> getStudents() {
-		return ResponseApi.<List<StudentDTO>>builder()
+	public ResponseApi<List<StudentResponse>> getStudents() {
+		return ResponseApi.<List<StudentResponse>>builder()
 				.result(studentService.getStudents())
+				.build();
+	}
+	
+	@GetMapping("/not-enrolled-in-course/{courseId}")
+	public ResponseApi<List<StudentResponse>> getStudentsNotEnrolled(@PathVariable Long courseId) {
+		return ResponseApi.<List<StudentResponse>>builder()
+				.result(studentService.getStudentsNotEnrolled(courseId))
 				.build();
 	}
 }

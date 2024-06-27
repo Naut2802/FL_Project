@@ -25,8 +25,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +32,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @PreAuthorize("hasRole('ADMIN')")
 public class ClassService {
-	private final CourseRepository courseRepository;
+	StudentClassRepository studentClassRepository;
+	CourseRepository courseRepository;
 	ClassRepository classRepository;
 	StudentRepository studentRepository;
 	ClassMapper classMapper;
@@ -52,25 +51,27 @@ public class ClassService {
 			List<Student> students = studentRepository.findAllById(request.getStudentIds());
 			List<StudentClass> studentClassList = new ArrayList<>();
 			
-			students.forEach(student ->
-					studentClassList.add(new StudentClass(student, clazz, 0,
-							LocalDate.now(), clazz.getCourse().getCoursePrice(),
-							LocalDate.now().plusMonths(1), false))
+			students.forEach(student -> {
+						if (!studentClassRepository.existsByStudentIdAndCourseId(student.getId(), clazz.getCourse().getId())) {
+							studentClassList.add(new StudentClass(student, clazz, 0,
+									LocalDate.now(), clazz.getCourse().getCoursePrice(),
+									LocalDate.now().plusMonths(1), false));
+						} else
+							throw new AppException(ErrorCode.EXISTED);
+					}
 			);
 			
 			clazz.setStudentClasses(new HashSet<>(studentClassList));
 		}
 		
 		classRepository.save(clazz);
-		return ClassResponse.builder()
-				.className(clazz.getClassName())
-				.courseName(clazz.getCourse() == null ? null :
-						clazz.getCourse().getCourseName())
-				.students(clazz.getStudentClasses() == null ? null :
-						clazz.getStudentClasses()
-								.stream()
-								.map(studentClassMapper::toStudentClassResponse).toList())
-				.build();
+		
+		ClassResponse classResponse = classMapper.toClassResponse(clazz);
+		classResponse.setStudents(clazz.getStudentClasses() == null ? null :
+				clazz.getStudentClasses()
+						.stream()
+						.map(studentClassMapper::toStudentClassResponse).toList());
+		return classResponse;
 	}
 	
 	public ClassResponse updateClass(long id, ClassRequest request) {
@@ -87,21 +88,27 @@ public class ClassService {
 			List<Student> students = studentRepository.findAllById(request.getStudentIds());
 			List<StudentClass> studentClassList = new ArrayList<>();
 			
-			students.forEach(student ->
-					studentClassList.add(new StudentClass(student, clazz, 0,
-							LocalDate.now(), clazz.getCourse().getCoursePrice(),
-							LocalDate.now().plusMonths(1), false))
+			students.forEach(student -> {
+						if (!studentClassRepository.existsByStudentIdAndCourseId(student.getId(), clazz.getCourse().getId())) {
+							studentClassList.add(new StudentClass(student, clazz, 0,
+									LocalDate.now(), clazz.getCourse().getCoursePrice(),
+									LocalDate.now().plusMonths(1), false));
+						} else
+							throw new AppException(ErrorCode.EXISTED);
+					}
 			);
 			
 			clazz.setStudentClasses(new HashSet<>(studentClassList));
 		}
 		
 		classRepository.save(clazz);
-		return ClassResponse.builder()
-				.className(clazz.getClassName())
-				.courseName(clazz.getCourse().getCourseName())
-				.students(clazz.getStudentClasses().stream().map(studentClassMapper::toStudentClassResponse).toList())
-				.build();
+		
+		ClassResponse classResponse = classMapper.toClassResponse(clazz);
+		classResponse.setStudents(clazz.getStudentClasses() == null ? null :
+				clazz.getStudentClasses()
+						.stream()
+						.map(studentClassMapper::toStudentClassResponse).toList());
+		return classResponse;
 	}
 	
 	public void deleteClass(long id) {
@@ -116,9 +123,14 @@ public class ClassService {
 		List<ClassResponse> classResponses = new ArrayList<>();
 		
 		classes.forEach(clazz -> classResponses.add(ClassResponse.builder()
+						.classId(clazz.getId())
 						.className(clazz.getClassName())
+						.limitQuantity(clazz.getLimitQuantity())
 						.courseName(clazz.getCourse().getCourseName())
-						.students(clazz.getStudentClasses().stream().map(studentClassMapper::toStudentClassResponse).toList())
+						.students(clazz.getStudentClasses() == null ? null :
+								clazz.getStudentClasses()
+										.stream()
+										.map(studentClassMapper::toStudentClassResponse).toList())
 				.build()));
 		
 		return classResponses;

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 
 @Entity

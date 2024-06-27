@@ -2,7 +2,6 @@ package com.littlesunny.config;
 
 import com.littlesunny.security.jwt.JwtAccessTokenFilter;
 import com.littlesunny.security.jwt.JwtUtils;
-import com.littlesunny.security.jwt.KeyUtils;
 import com.littlesunny.security.user.CustomUserDetailsService;
 import com.littlesunny.security.user.LogoutHandler;
 import com.littlesunny.service.KeyService;
@@ -39,7 +38,6 @@ public class SecurityConfig {
 			"/api/v1/user"
 	};
 	
-	KeyUtils keyUtils;
 	JwtUtils jwtUtils;
 	LogoutHandler logoutHandler;
 	CustomUserDetailsService userDetailsService;

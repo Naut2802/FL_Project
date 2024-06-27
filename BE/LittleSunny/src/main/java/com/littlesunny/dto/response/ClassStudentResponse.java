@@ -1,10 +1,9 @@
 package com.littlesunny.dto.response;
 
-import com.littlesunny.entity.Class;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -12,9 +11,11 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CourseResponse {
-	long courseId;
-	String courseName;
-	double coursePrice;
-	List<ClassResponseForCourse> classes;
+public class ClassStudentResponse {
+	String className;
+	float score;
+	LocalDate joinDate;
+	double tuitionFee;
+	LocalDate expirationDate;
+	boolean isPaidFee;
 }

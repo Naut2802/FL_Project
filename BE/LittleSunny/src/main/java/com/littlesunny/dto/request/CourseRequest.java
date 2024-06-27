@@ -15,5 +15,5 @@ import java.util.Set;
 public class CourseRequest {
 	String courseName;
 	String coursePrice;
-	Set<String> classes;
+	Set<Long> classIds;
 }

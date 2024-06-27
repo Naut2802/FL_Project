@@ -49,4 +49,11 @@ public class CourseController {
 				.result(courseService.getCourses())
 				.build();
 	}
+	
+	@GetMapping("/not-enrolled-by-student/{studentId}")
+	public ResponseApi<List<CourseResponse>> getCoursesNotEnrolled(@PathVariable Long studentId) {
+		return ResponseApi.<List<CourseResponse>>builder()
+				.result(courseService.getCoursesNotEnrolledByStudent(studentId))
+				.build();
+	}
 }

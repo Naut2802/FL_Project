@@ -28,7 +28,7 @@ public class JwtUtils {
 		boolean isUserExist = userRepository.existsById(getUserId(jwt));
 		
 		if (isTokenExpired) throw new AppException(ErrorCode.TOKEN_EXPIRED);
-		return !isTokenExpired && isUserExist;
+		return isUserExist;
 	}
 	
 	private boolean getIfTokenIsExpired(Jwt jwt) {
