@@ -12,10 +12,11 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StudentClassResponse {
-	String student;
+	String studentId;
+	String studentName;
 	float score;
 	LocalDate joinDate;
 	double tuitionFee;
 	LocalDate expirationDate;
-	boolean isPaidFee;
+	boolean paymentStatus;
 }

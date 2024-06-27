@@ -1,5 +1,6 @@
 package com.littlesunny.controller;
 
+import com.littlesunny.dto.request.StudentClassRequest;
 import com.littlesunny.dto.request.StudentRequest;
 import com.littlesunny.dto.response.ResponseApi;
 import com.littlesunny.dto.response.StudentResponse;
@@ -28,14 +29,14 @@ public class StudentController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseApi<StudentResponse> updateStudent(@PathVariable long id, @RequestBody StudentRequest request) {
+	public ResponseApi<StudentResponse> updateStudent(@PathVariable String id, @RequestBody StudentRequest request) {
 		return ResponseApi.<StudentResponse>builder()
 				.result(studentService.updateStudent(id, request))
 				.build();
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseApi<?> deleteStudent(@PathVariable long id) {
+	public ResponseApi<?> deleteStudent(@PathVariable String id) {
 		studentService.deleteStudent(id);
 		return ResponseApi.builder()
 				.result("Student has been deleted")
@@ -53,6 +54,13 @@ public class StudentController {
 	public ResponseApi<List<StudentResponse>> getStudentsNotEnrolled(@PathVariable Long courseId) {
 		return ResponseApi.<List<StudentResponse>>builder()
 				.result(studentService.getStudentsNotEnrolled(courseId))
+				.build();
+	}
+	
+	@PutMapping("/update-payment-status")
+	public ResponseApi<StudentResponse> updatePaymentStatus(@RequestBody StudentClassRequest request) {
+		return ResponseApi.<StudentResponse>builder()
+				.result(studentService.updatePaymentStatus(request))
 				.build();
 	}
 }

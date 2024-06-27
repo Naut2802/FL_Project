@@ -48,4 +48,11 @@ public class ClassController {
 				.result(classService.getClasses())
 				.build();
 	}
+	
+	@GetMapping("/count-students-by-class/{classId}")
+	public ResponseApi<Long> countStudentsByClassId(@PathVariable long classId) {
+		return ResponseApi.<Long>builder()
+				.result(classService.countStudentsInClass(classId))
+				.build();
+	}
 }

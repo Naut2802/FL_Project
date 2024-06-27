@@ -9,11 +9,11 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface StudentClassMapper {
-	StudentClassMapper INSTANCE = Mappers.getMapper(StudentClassMapper.class);
-	
-	@Mapping(source = "student.fullName", target = "student")
+	@Mapping(source = "student.id", target = "studentId")
+	@Mapping(source = "student.fullName", target = "studentName")
 	StudentClassResponse toStudentClassResponse(StudentClass studentClass);
 	
+	@Mapping(source = "clazz.id", target = "classId")
 	@Mapping(source = "clazz.className", target = "className")
 	ClassStudentResponse toClassStudentResponse(StudentClass studentClass);
 }
