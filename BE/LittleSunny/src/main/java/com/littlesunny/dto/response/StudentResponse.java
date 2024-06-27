@@ -16,7 +16,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StudentResponse {
-	long id;
+	String id;
 	String fullName;
 	String address;
 	LocalDate dob;

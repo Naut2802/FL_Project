@@ -17,8 +17,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Student {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	long id;
+	String id;
 	String fullName;
 	String address;
 	LocalDate dob;

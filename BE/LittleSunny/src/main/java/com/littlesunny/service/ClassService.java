@@ -6,6 +6,7 @@ import com.littlesunny.dto.response.StudentClassResponse;
 import com.littlesunny.entity.Class;
 import com.littlesunny.entity.Student;
 import com.littlesunny.entity.StudentClass;
+import com.littlesunny.entity.StudentClassId;
 import com.littlesunny.exception.AppException;
 import com.littlesunny.exception.ErrorCode;
 import com.littlesunny.mapper.ClassMapper;
@@ -46,20 +47,29 @@ public class ClassService {
 		Class clazz = classMapper.toClass(request);
 		
 		clazz.setCourse(courseRepository.findById(request.getCourseId()).orElse(null));
+		classRepository.save(clazz);
+		
+		clazz = classRepository.findByClassName(request.getClassName()).orElseThrow(() ->
+				new AppException(ErrorCode.CLASS_NOT_EXISTED));
 		
 		if (request.getStudentIds() != null) {
 			List<Student> students = studentRepository.findAllById(request.getStudentIds());
 			List<StudentClass> studentClassList = new ArrayList<>();
+			String course = "";
 			
-			students.forEach(student -> {
-						if (!studentClassRepository.existsByStudentIdAndCourseId(student.getId(), clazz.getCourse().getId())) {
-							studentClassList.add(new StudentClass(student, clazz, 0,
-									LocalDate.now(), clazz.getCourse().getCoursePrice(),
-									LocalDate.now().plusMonths(1), false));
-						} else
-							throw new AppException(ErrorCode.EXISTED);
-					}
-			);
+			for (Student student : students) {
+				if (!course.equals(clazz.getCourse().getCourseName())) {
+					course = clazz.getCourse().getCourseName();
+					if (!studentClassRepository.existsByStudentIdAndCourseId(student.getId(), clazz.getCourse().getId())) {
+						StudentClassId studentClassId = new StudentClassId(student.getId(), clazz.getId());
+						studentClassList.add(new StudentClass(studentClassId, student, clazz, 0,
+								LocalDate.now(), clazz.getCourse().getCoursePrice(),
+								LocalDate.now().plusMonths(1), false));
+					} else
+						throw new AppException(ErrorCode.EXISTED);
+				} else
+					throw new AppException(ErrorCode.EXISTED);
+			}
 			
 			clazz.setStudentClasses(new HashSet<>(studentClassList));
 		}
@@ -87,16 +97,21 @@ public class ClassService {
 		if (request.getStudentIds() != null) {
 			List<Student> students = studentRepository.findAllById(request.getStudentIds());
 			List<StudentClass> studentClassList = new ArrayList<>();
+			String course = "";
 			
-			students.forEach(student -> {
-						if (!studentClassRepository.existsByStudentIdAndCourseId(student.getId(), clazz.getCourse().getId())) {
-							studentClassList.add(new StudentClass(student, clazz, 0,
-									LocalDate.now(), clazz.getCourse().getCoursePrice(),
-									LocalDate.now().plusMonths(1), false));
-						} else
-							throw new AppException(ErrorCode.EXISTED);
-					}
-			);
+			for (Student student : students) {
+				if (!course.equals(clazz.getCourse().getCourseName())) {
+					course = clazz.getCourse().getCourseName();
+					if (!studentClassRepository.existsByStudentIdAndCourseId(student.getId(), clazz.getCourse().getId())) {
+						StudentClassId studentClassId = new StudentClassId(student.getId(), clazz.getId());
+						studentClassList.add(new StudentClass(studentClassId, student, clazz, 0,
+								LocalDate.now(), clazz.getCourse().getCoursePrice(),
+								LocalDate.now().plusMonths(1), false));
+					} else
+						throw new AppException(ErrorCode.EXISTED);
+				} else
+					throw new AppException(ErrorCode.EXISTED);
+			}
 			
 			clazz.setStudentClasses(new HashSet<>(studentClassList));
 		}

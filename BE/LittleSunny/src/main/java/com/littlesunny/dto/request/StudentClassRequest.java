@@ -1,9 +1,9 @@
 package com.littlesunny.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -12,8 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ClassRequest {
-	String className;
-	long courseId;
-	Set<String> studentIds;
+public class StudentClassRequest {
+	String studentId;
+	long classId;
 }

@@ -1,12 +1,15 @@
 package com.littlesunny.service;
 
+import com.littlesunny.dto.request.StudentClassRequest;
 import com.littlesunny.dto.request.StudentRequest;
 import com.littlesunny.dto.response.StudentResponse;
 import com.littlesunny.entity.Class;
 import com.littlesunny.entity.Student;
 import com.littlesunny.entity.StudentClass;
+import com.littlesunny.entity.StudentClassId;
 import com.littlesunny.exception.AppException;
 import com.littlesunny.exception.ErrorCode;
+import com.littlesunny.mapper.StudentClassIdMapper;
 import com.littlesunny.mapper.StudentClassMapper;
 import com.littlesunny.mapper.StudentMapper;
 import com.littlesunny.repository.ClassRepository;
@@ -36,26 +39,40 @@ public class StudentService {
 	ClassRepository classRepository;
 	StudentMapper studentMapper;
 	StudentClassMapper studentClassMapper;
+	StudentClassIdMapper studentClassIdMapper;
 	
 	public StudentResponse createStudent(StudentRequest request) {
-		if (studentRepository.existsByFullName(request.getFullName()))
-			throw new AppException(ErrorCode.EXISTED);
-		
 		var student = studentMapper.toStudent(request);
+		int idNumber = studentRepository.findMaxIdNumber() == null ? 1 : studentRepository.findMaxIdNumber() + 1;
+		
+		String id = "HV";
+		if (idNumber < 10)
+			id += "0" + idNumber;
+		else
+			id += idNumber;
+		
+		student.setId(id);
+		if (studentRepository.existsById(student.getId()))
+			throw new AppException(ErrorCode.EXISTED);
 		
 		if (request.getClassIds() != null) {
 			List<Class> classes = classRepository.findAllById(request.getClassIds());
 			List<StudentClass> studentClassList = new ArrayList<>();
+			String course = "";
 			
-			classes.forEach(clazz -> {
-						if (!studentClassRepository.existsByStudentIdAndCourseId(student.getId(), clazz.getCourse().getId())) {
-							studentClassList.add(new StudentClass(student, clazz, 0,
-									LocalDate.now(), clazz.getCourse().getCoursePrice(),
-									LocalDate.now().plusMonths(1), false));
-						} else
-							throw new AppException(ErrorCode.EXISTED);
-					}
-			);
+			for (Class clazz : classes) {
+				if (!course.equals(clazz.getCourse().getCourseName())) {
+					course = clazz.getCourse().getCourseName();
+					if (!studentClassRepository.existsByStudentIdAndCourseId(student.getId(), clazz.getCourse().getId())) {
+						StudentClassId studentClassId = new StudentClassId(student.getId(), clazz.getId());
+						studentClassList.add(new StudentClass(studentClassId, student, clazz, 0,
+								LocalDate.now(), clazz.getCourse().getCoursePrice(),
+								LocalDate.now().plusMonths(1), false));
+					} else
+						throw new AppException(ErrorCode.EXISTED);
+				} else
+					throw new AppException(ErrorCode.EXISTED);
+			}
 			
 			student.setStudentClasses(new HashSet<>(studentClassList));;
 		}
@@ -70,7 +87,7 @@ public class StudentService {
 		return studentResponse;
 	}
 	
-	public StudentResponse updateStudent(long id, StudentRequest request) {
+	public StudentResponse updateStudent(String id, StudentRequest request) {
 		var student = studentRepository.findById(id).orElseThrow(() ->
 				new AppException(ErrorCode.STUDENT_NOT_EXISTED));
 		
@@ -79,16 +96,21 @@ public class StudentService {
 		if (request.getClassIds() != null) {
 			List<Class> classes = classRepository.findAllById(request.getClassIds());
 			List<StudentClass> studentClassList = new ArrayList<>();
+			String course = "";
 			
-			classes.forEach(clazz -> {
-						if (!studentClassRepository.existsByStudentIdAndCourseId(student.getId(), clazz.getCourse().getId())) {
-							studentClassList.add(new StudentClass(student, clazz, 0,
-									LocalDate.now(), clazz.getCourse().getCoursePrice(),
-									LocalDate.now().plusMonths(1), false));
-						} else
-							throw new AppException(ErrorCode.EXISTED);
-					}
-			);
+			for (Class clazz : classes) {
+				if (!course.equals(clazz.getCourse().getCourseName())) {
+					course = clazz.getCourse().getCourseName();
+					if (!studentClassRepository.existsByStudentIdAndCourseId(student.getId(), clazz.getCourse().getId())) {
+						StudentClassId studentClassId = new StudentClassId(student.getId(), clazz.getId());
+						studentClassList.add(new StudentClass(studentClassId, student, clazz, 0,
+								LocalDate.now(), clazz.getCourse().getCoursePrice(),
+								LocalDate.now().plusMonths(1), false));
+					} else
+						throw new AppException(ErrorCode.EXISTED);
+				} else
+					throw new AppException(ErrorCode.EXISTED);
+			}
 			
 			student.setStudentClasses(new HashSet<>(studentClassList));;
 		}
@@ -103,7 +125,7 @@ public class StudentService {
 		return studentResponse;
 	}
 	
-	public void deleteStudent(long id) {
+	public void deleteStudent(String id) {
 		if (!studentRepository.existsById(id))
 			throw new AppException(ErrorCode.STUDENT_NOT_EXISTED);
 		
@@ -134,5 +156,20 @@ public class StudentService {
 	@Transactional(readOnly = true)
 	public List<StudentResponse> getStudentsNotEnrolled(long courseId) {
 		return studentRepository.findStudentsNotEnrolledInCourse(courseId).stream().map(studentMapper::toStudentResponse).toList();
+	}
+	
+	public StudentResponse updatePaymentStatus(StudentClassRequest request) {
+		Student student = studentRepository.findById(request.getStudentId()).orElseThrow(() ->
+				new AppException(ErrorCode.STUDENT_NOT_EXISTED));
+		
+		StudentClassId id = studentClassIdMapper.toStudentClassId(request);
+		StudentClass studentClass = studentClassRepository.findById(id).orElseThrow(() ->
+				new AppException(ErrorCode.CLASS_NOT_EXISTED));
+		
+		studentClass.setPaymentStatus(true);
+		studentClassRepository.save(studentClass);
+		StudentResponse studentResponse = studentMapper.toStudentResponse(student);
+		studentResponse.setClasses(List.of(studentClassMapper.toClassStudentResponse(studentClass)));
+		return studentResponse;
 	}
 }

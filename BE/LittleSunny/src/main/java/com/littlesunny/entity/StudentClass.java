@@ -13,35 +13,33 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(uniqueConstraints = {
-		@UniqueConstraint(columnNames = {"student_id", "class_id"})
-})
 public class StudentClass {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	long id;
+	@EmbeddedId
+	StudentClassId id;
 	
-	@ManyToOne @JoinColumn(name = "student_id")
+	@ManyToOne @MapsId("studentId")
+	@JoinColumn(name = "student_id")
 	Student student;
-	@ManyToOne @JoinColumn(name = "class_id")
+	@ManyToOne @MapsId("classId")
+	@JoinColumn(name = "class_id")
 	Class clazz;
 	
 	float score;
 	LocalDate joinDate;
 	double tuitionFee;
 	LocalDate expirationDate;
-	boolean isPaidFee;
+	boolean paymentStatus;
 	
 	
 	public StudentClass(Student student, Class clazz, float score,
 	                    LocalDate joinDate, double tuitionFee,
-	                    LocalDate expirationDate, boolean isPaidFee) {
+	                    LocalDate expirationDate, boolean paymentStatus) {
 		this.student = student;
 		this.clazz = clazz;
 		this.score = score;
 		this.joinDate = joinDate;
 		this.tuitionFee = tuitionFee;
 		this.expirationDate = expirationDate;
-		this.isPaidFee = isPaidFee;
+		this.paymentStatus = paymentStatus;
 	}
 }

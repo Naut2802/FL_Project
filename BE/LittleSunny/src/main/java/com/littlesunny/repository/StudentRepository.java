@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface StudentRepository extends JpaRepository<Student, Long> {
+public interface StudentRepository extends JpaRepository<Student, String> {
 	Optional<Student> findByFullName(String fullName);
 	List<Student> findAllByFullNameIn(Iterable<String> fullNames);
 	boolean existsByFullName(String fullName);
@@ -20,4 +20,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 			"  WHERE c.course.id = :courseId" +
 			")")
 	List<Student> findStudentsNotEnrolledInCourse(@Param("courseId") Long courseId);
+	@Query("SELECT MAX(CAST(SUBSTRING(s.id, 3) AS int)) FROM Student s WHERE s.id LIKE 'HV%'")
+	Integer findMaxIdNumber();
 }
