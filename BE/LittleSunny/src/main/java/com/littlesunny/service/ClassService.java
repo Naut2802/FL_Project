@@ -150,4 +150,8 @@ public class ClassService {
 		
 		return classResponses;
 	}
+	
+	public long countStudentsInClass(long classId) {
+		return studentClassRepository.countStudentsByClassId(classId);
+	}
 }

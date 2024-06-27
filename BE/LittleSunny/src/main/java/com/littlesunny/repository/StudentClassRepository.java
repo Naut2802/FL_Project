@@ -17,4 +17,6 @@ public interface StudentClassRepository extends JpaRepository<StudentClass, Stud
 		"JOIN c.course co " +
 		"WHERE sc.student.id = :studentId AND co.id = :courseId")
 	boolean existsByStudentIdAndCourseId(@Param("studentId") String studentId, @Param("courseId") Long courseId);
+	@Query("SELECT COUNT(sc) FROM StudentClass sc WHERE sc.clazz.id = :classId")
+	Long countStudentsByClassId(Long classId);
 }
