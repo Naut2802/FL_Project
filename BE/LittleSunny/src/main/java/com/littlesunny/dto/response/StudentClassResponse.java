@@ -1,6 +1,5 @@
 package com.littlesunny.dto.response;
 
-import com.littlesunny.dto.StudentDTO;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

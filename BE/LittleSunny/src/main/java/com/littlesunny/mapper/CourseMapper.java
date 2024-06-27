@@ -13,6 +13,8 @@ public interface CourseMapper {
 	@Mapping(target = "classes", ignore = true)
 	Course toCourse(CourseRequest request);
 	
+	@Mapping(source = "id", target = "courseId")
+	@Mapping(target = "classes", ignore = true)
 	CourseResponse toCourseResponse(Course course);
 	
 	@Mapping(target = "classes", ignore = true)

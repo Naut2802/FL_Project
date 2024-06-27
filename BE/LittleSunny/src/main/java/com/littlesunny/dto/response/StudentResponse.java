@@ -1,11 +1,12 @@
-package com.littlesunny.dto;
+package com.littlesunny.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.littlesunny.entity.StudentClass;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,12 +14,13 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class StudentDTO {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class StudentResponse {
+	long id;
 	String fullName;
 	String address;
 	LocalDate dob;
 	String phoneNumber;
 	String parentBankNumber;
-	
-	Set<StudentClass> classes;
+	List<ClassStudentResponse> classes;
 }

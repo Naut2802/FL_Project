@@ -1,7 +1,6 @@
 package com.littlesunny.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,6 +15,9 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvalidatedToken {
 	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
 	String id;
+	@Column(name = "token", nullable = false, columnDefinition = "TEXT")
+	String token;
 	Date expiryTime;
 }

@@ -15,12 +15,12 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RefreshTokenWhiteList {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	long id;
+	String id;
 	@Column(name = "token", nullable = false, columnDefinition = "TEXT")
 	String token;
 	Date expiryTime;
-	
+	@Column(name = "public_key", nullable = false, columnDefinition = "TEXT")
+	String publicKey;
 	@ManyToOne @JoinColumn(name = "user_id")
 	User user;
 }

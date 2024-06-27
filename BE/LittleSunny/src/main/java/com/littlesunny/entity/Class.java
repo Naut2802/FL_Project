@@ -17,9 +17,11 @@ import java.util.Set;
 public class Class {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int id;
+	long id;
 	@Column(unique = true)
 	String className;
+	@Builder.Default
+	int limitQuantity = 15;
 	
 	@ManyToOne @JoinColumn(name = "courseId")
 	Course course;

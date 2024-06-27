@@ -6,8 +6,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
 
-import static jakarta.persistence.CascadeType.REMOVE;
-
 @Entity
 @Builder
 @Getter
@@ -27,8 +25,8 @@ public class User {
 	String firstName;
 	String lastName;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	Set<Role> roles;
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	Set<RefreshTokenWhiteList> tokens;
 }

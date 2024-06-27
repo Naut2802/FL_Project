@@ -8,13 +8,13 @@ import Home from './pages/Home';
 import News from './pages/News';
 
 const ProtectedRoute = () => {
-    const user = JSON.parse(localStorage.getItem('userInfo'));
+    const user = localStorage.getItem('userId');
     if (!user) return <Navigate to="/login" replace={true} />;
     return <Outlet />;
 };
 
 const UnauthorizedRoute = () => {
-    const user = JSON.parse(localStorage.getItem('userInfo'));
+    const user = localStorage.getItem('userId');
     if (user) return <Navigate to="/home" replace={true} />;
     return <Outlet />;
 };

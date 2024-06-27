@@ -14,16 +14,11 @@ function LoginForm() {
     const navigate = useNavigate();
 
     const submitLogIn = async (data) => {
-        const res = await authorizedAxiosInstance.post(`${API_ROOT}/api/v1/auth/login`, data);
+        const res = await authorizedAxiosInstance.post(`${API_ROOT}/api/auth/sign-in`, data);
         localStorage.setItem('accessToken', res.data.result.accessToken);
-        localStorage.setItem('refreshToken', res.data.result.refreshToken);
+        localStorage.setItem('userId', res.data.result.userId);
 
         const res2 = await authorizedAxiosInstance.get(`${API_ROOT}/api/v1/user/my-info`);
-        const userInfo = {
-            id: res2.data.result.id,
-            email: res2.data.result.email,
-        };
-        localStorage.setItem('userInfo', JSON.stringify(userInfo));
         const roleInfo = res2.data.result.roles[0].roleName;
         if (roleInfo === 'ADMIN') {
             navigate('/news');
