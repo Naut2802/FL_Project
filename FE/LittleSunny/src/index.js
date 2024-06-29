@@ -17,7 +17,7 @@ root.render(
             <App />
             {/* </React.StrictMode> */}
         </GlobalStyles>
-        <ToastContainer position="bottom-left" theme="colored" />
+        <ToastContainer position="bottom-right" theme="colored" />
     </BrowserRouter>,
 );
 

@@ -79,7 +79,7 @@ function News() {
                 sx={{ mt: 2, maxWidth: 'min-content', alignSelf: 'flex-end' }}
                 onClick={handleLogut}
             >
-                Logout
+                Đăng xuất
             </Button>
 
             <Divider sx={{ my: 2 }} />

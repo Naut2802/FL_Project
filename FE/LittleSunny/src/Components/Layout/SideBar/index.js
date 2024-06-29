@@ -1,9 +1,27 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '~/LittleSunny.png';
+import { handleGetMyInfoAPI } from '~/apis';
+import LoginButton from './LoginButton';
+import LogoutButton from './LogoutButton';
 import './SideBar.module.scss';
 
 function SideBar() {
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await handleGetMyInfoAPI();
+                setUser(res.data.result);
+            } catch (error) {
+                // console.log(error);
+            }
+        };
+        fetchData();
+    }, []);
+
     return (
         <div className="sideBar">
             <div className="col-auto">
@@ -34,12 +52,6 @@ function SideBar() {
                             <span className="navbar-toggler-icon"></span>
                         </button>
                         <ul className="nav nav-pills flex-column">
-                            <li className="nav-item fs-4 my-1 py-2 py-sm-0">
-                                <Link to="addS" className="nav-link  text-black">
-                                    <i className="bi bi-person-add"></i>
-                                    <span className="ms-3 d-none d-sm-inline">Thêm Học Viên</span>
-                                </Link>
-                            </li>
                             <li className="nav-item fs-4 my-1 py-2 py-sm-0">
                                 <Link to="student" className="nav-link  text-black">
                                     <i className="bi bi-card-list"></i>
@@ -74,15 +86,12 @@ function SideBar() {
                             aria-expanded="false"
                         >
                             <i className="bi bi-person-circle"></i>
-                            <span className="ms-2 d-none d-sm-inline my-1 py-2 py-sm-0">ADMIN nè</span>
+                            <span className="ms-2 d-none d-sm-inline my-1 py-2 py-sm-0">
+                                {!user ? 'Tài Khoản ' : user?.email}
+                            </span>
                         </button>
-                        <ul className="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <button className="dropdown-item" type="button">
-                                    <i className="bi bi-door-open"></i>
-                                    <span className="ms-2 d-none d-sm-inline">Đăng Xuất</span>
-                                </button>
-                            </li>
+                        <ul id="Button-Logout" className="dropdown-menu dropdown-menu-end">
+                            <li>{!user ? <LoginButton /> : <LogoutButton />}</li>
                         </ul>
                     </div>
                 </div>

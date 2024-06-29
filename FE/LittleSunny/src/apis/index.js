@@ -1,6 +1,10 @@
 import authorizedAxiosInstance from '~/utils/authorizedAxios';
 import { API_ROOT } from '~/utils/constants';
 
+export const refreshTokenAPI = async (refreshToken) => {
+    return await authorizedAxiosInstance.put(`${API_ROOT}/api/v1/auth/refresh`, { token: refreshToken });
+};
+
 export const handleLogoutAPI = async () => {
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
@@ -12,6 +16,6 @@ export const handleLogoutAPI = async () => {
     });
 };
 
-export const refreshTokenAPI = async (refreshToken) => {
-    return await authorizedAxiosInstance.put(`${API_ROOT}/api/v1/auth/refresh`, { token: refreshToken });
+export const handleGetMyInfoAPI = async () => {
+    return await authorizedAxiosInstance.get(`${API_ROOT}/api/v1/user/my-info`);
 };

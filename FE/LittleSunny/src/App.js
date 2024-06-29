@@ -1,11 +1,10 @@
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import LoginForm from './Components/Account/Login/LoginForm';
-import AddStudent from './Components/Layout/AddStudets/AddStudets';
-import DSHocVien from './Components/Layout/DSHocVien/DSHocVien';
-import DSLopKhoaHoc from './Components/Layout/DSLop_KhoaHoc/DSLopKhoaHoc';
-import DSHocVienLop from './Components/Layout/HocVienLop/HocVien_Lop';
-import ThongKe from './Components/Layout/ThongKe/ThongKe';
+import LoginForm from './Components/Account/Login';
+import DSHocVien from './Components/Layout/DSHocVien';
+import DSLopKhoaHoc from './Components/Layout/DSLopKhoaHoc';
+import DSHocVienLop from './Components/Layout/HocVienLop';
+import ThongKe from './Components/Layout/ThongKe';
 import Home from './pages/Home';
 import News from './pages/News';
 
@@ -30,7 +29,6 @@ function App() {
             <Route path="/" element={<Navigate to="/login" replace={true} />} />
             <Route path="/home" element={<Home />}>
                 <Route path="student" element={<DSHocVien />} />
-                <Route path="addS" element={<AddStudent />} />
                 <Route path="course" element={<DSLopKhoaHoc />} />
                 <Route path="classes" element={<DSHocVienLop />} />
                 <Route path="thongke" element={<ThongKe />} />

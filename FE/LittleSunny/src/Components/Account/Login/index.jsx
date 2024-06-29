@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { FaLock, FaUser } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { handleGetMyInfoAPI } from '~/apis';
 import authorizedAxiosInstance from '~/utils/authorizedAxios';
 import { API_ROOT } from '~/utils/constants';
 import styles from './LoginForm.module.scss';
@@ -18,7 +19,7 @@ function LoginForm() {
         localStorage.setItem('accessToken', res.data.result.accessToken);
         localStorage.setItem('refreshToken', res.data.result.refreshToken);
 
-        const res2 = await authorizedAxiosInstance.get(`${API_ROOT}/api/v1/user/my-info`);
+        const res2 = await handleGetMyInfoAPI();
         const userInfo = {
             id: res2.data.result.id,
             email: res2.data.result.email,
@@ -26,10 +27,11 @@ function LoginForm() {
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
         const roleInfo = res2.data.result.roles[0].roleName;
         if (roleInfo === 'ADMIN') {
-            navigate('/news');
-        } else {
             navigate('/home');
         }
+        // else {
+        //     navigate('/home');
+        // }
         toast.success('Đăng nhập thành công');
     };
 

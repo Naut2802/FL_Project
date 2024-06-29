@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import { handleLogoutAPI, refreshTokenAPI } from '~/apis';
+// import { toast } from 'react-toastify';
+import { refreshTokenAPI } from '~/apis';
 
 let authorizedAxiosInstance = axios.create({
     baseURL: 'http://localhost:2802/api/v1',
@@ -81,14 +81,18 @@ authorizedAxiosInstance.interceptors.response.use(
         }
 
         if (status === 401) {
-            await handleLogoutAPI();
-            window.location.replace('/login');
-            toast.info('Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại!!!');
+            console.log(error.request.responseURL);
+            if (error.request.responseURL.includes('user/my-info')) {
+            }
+            console.clear();
+            // await handleLogoutAPI();
+            // window.location.replace('/login');
+            // toast.info('Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại!!!');
         }
 
-        if (status !== 410) {
-            toast.error(error.response?.data?.message || error?.message);
-        }
+        // if (status !== 410) {
+        //     toast.error(error.response?.data?.message || error?.message);
+        // }
 
         return Promise.reject(error);
     },
