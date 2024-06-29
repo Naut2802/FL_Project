@@ -47,86 +47,89 @@ public class AuthenticationService {
 	PasswordEncoder passwordEncoder;
 	RoleRepository roleRepository;
 	KeyUtils keyUtils;
-	
+
 	@NonFinal
 	@Value("${jwt.refresh-token-valid-duration}")
 	long REFRESH_TOKEN_VALID_DURATION;
-	
+
 	public UserResponse register(UserCreationRequest request) {
-		if(userRepository.existsByUsername(request.getUsername()))
+		if (userRepository.existsByUsername(request.getUsername()))
 			throw new AppException(ErrorCode.USER_EXISTED);
 
 		var user = userMapper.toUser(request);
 
 		user.setPassword(encodePassword(user.getUsername(), user.getPassword()));
 
-		var role = roleRepository.findByRoleName("USER").orElseThrow(() ->
-				new AppException(ErrorCode.ROLE_NOT_EXISTED));
+		var role = roleRepository.findByRoleName("USER")
+				.orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
 
 		user.setRoles(new HashSet<>(List.of(role)));
 
 		return userMapper.toUserResponse(userRepository.save(user));
 	}
-	
-	public AuthenticationResponse authenticate(HttpServletResponse response, LoginRequest request) throws NoSuchAlgorithmException {
+
+	public AuthenticationResponse authenticate(HttpServletResponse response, LoginRequest request)
+			throws NoSuchAlgorithmException {
 		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 		var user = userRepository
 				.findByUsername(request.getUsername())
 				.orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-		
-		boolean authenticated = passwordEncoder.matches(request.getUsername() + request.getPassword(), user.getPassword());
-		
-		if (!authenticated) throw new AppException(ErrorCode.USER_NOT_EXISTED);
-		
+
+		boolean authenticated = passwordEncoder.matches(request.getUsername() + request.getPassword(),
+				user.getPassword());
+
+		if (!authenticated)
+			throw new AppException(ErrorCode.USER_NOT_EXISTED);
+
 		KeyPair keyPair = keyUtils.generateKeyPair();
 		var accessToken = jwtService.generateAccessToken(user, keyPair);
-		String jti = accessToken.substring(accessToken.length()-10);
+		String jti = accessToken.substring(accessToken.length() - 10);
 		var refreshToken = jwtService.generateRefreshToken(user, jti, keyPair);
 		String publicKey = keyUtils.exchangeRSAPublicKeyToString((RSAPublicKey) keyPair.getPublic());
-		
+
 		saveRefreshToken(user, refreshToken, publicKey);
-		
+
 		createRefreshTokenCookie(response, refreshToken);
-		
+
 		return AuthenticationResponse.builder()
 				.accessToken(accessToken)
 				.userId(user.getId())
 				.authenticated(true)
 				.build();
 	}
-	
+
 	@Transactional
-	public AuthenticationResponse refreshToken(HttpServletRequest request, HttpServletResponse response, RefreshRequest refreshRequest) throws NoSuchAlgorithmException {
+	public AuthenticationResponse refreshToken(HttpServletRequest request, HttpServletResponse response,
+			RefreshRequest refreshRequest) throws NoSuchAlgorithmException {
 		User user = userRepository.findById(refreshRequest.getUserId())
 				.orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-		
+
 		var refreshTokenFromCookies = getRefreshTokenFromCookies(request);
-		
+
 		var refreshTokenFromRepo = refreshTokenRepository.findByToken(refreshTokenFromCookies)
 				.orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
-		if (refreshTokenFromRepo.getExpiryTime().toInstant().isBefore(Instant.now())) {
-			throw new AppException(ErrorCode.TOKEN_EXPIRED);
-		}
-		
+		if (refreshTokenFromRepo.getExpiryTime().toInstant().isBefore(Instant.now()))
+			throw new AppException(ErrorCode.UNAUTHENTICATED);
+
 		refreshTokenRepository.deleteByToken(refreshTokenFromCookies);
-		
+
 		KeyPair keyPair = keyUtils.generateKeyPair();
 		var accessToken = jwtService.generateAccessToken(user, keyPair);
-		String jti = accessToken.substring(accessToken.length()-10);
+		String jti = accessToken.substring(accessToken.length() - 10);
 		var refreshToken = jwtService.generateRefreshToken(user, jti, keyPair);
 		String publicKey = keyUtils.exchangeRSAPublicKeyToString((RSAPublicKey) keyPair.getPublic());
-		
+
 		saveRefreshToken(user, refreshToken, publicKey);
-		
+
 		createRefreshTokenCookie(response, refreshToken);
-		
+
 		return AuthenticationResponse.builder()
 				.accessToken(accessToken)
 				.userId(user.getId())
 				.authenticated(true)
 				.build();
 	}
-	
+
 	private void saveRefreshToken(User user, Jwt refreshToken, String publicKey) {
 		refreshTokenRepository.save(RefreshTokenWhiteList.builder()
 				.id(refreshToken.getId())
@@ -136,7 +139,7 @@ public class AuthenticationService {
 				.expiryTime(Date.from(refreshToken.getExpiresAt()))
 				.build());
 	}
-	
+
 	private void createRefreshTokenCookie(HttpServletResponse response, Jwt refreshToken) {
 		Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken.getTokenValue());
 		refreshTokenCookie.setHttpOnly(true);
@@ -144,7 +147,7 @@ public class AuthenticationService {
 		refreshTokenCookie.setMaxAge((int) REFRESH_TOKEN_VALID_DURATION + (60 * 60 * 48)); // in seconds
 		response.addCookie(refreshTokenCookie);
 	}
-	
+
 	private String getRefreshTokenFromCookies(HttpServletRequest request) {
 		if (request.getCookies() != null) {
 			for (Cookie cookie : request.getCookies()) {
@@ -155,7 +158,7 @@ public class AuthenticationService {
 		}
 		return null;
 	}
-	
+
 	private String encodePassword(String username, String password) {
 		return passwordEncoder.encode(username + password);
 	}

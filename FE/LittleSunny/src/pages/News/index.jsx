@@ -7,9 +7,7 @@ import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { handleLogoutAPI } from '~/apis';
-import authorizedAxiosInstance from '~/utils/authorizedAxios';
-import { API_ROOT } from '~/utils/constants';
+import { handleGetMyInfoAPI, handleLogoutAPI } from '~/apis';
 
 function News() {
     const [user, setUser] = useState(null);
@@ -18,8 +16,8 @@ function News() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await authorizedAxiosInstance.get(`${API_ROOT}/api/v1/user/my-info`);
-                setUser(res.data.result);   
+                const res = handleGetMyInfoAPI();
+                setUser(res.data.result);
             } catch (error) {
                 console.log(error);
             }
@@ -81,7 +79,7 @@ function News() {
                 sx={{ mt: 2, maxWidth: 'min-content', alignSelf: 'flex-end' }}
                 onClick={handleLogut}
             >
-                Logout
+                Đăng xuất
             </Button>
 
             <Divider sx={{ my: 2 }} />

@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { FaLock, FaUser } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { handleGetMyInfoAPI } from '~/apis';
 import authorizedAxiosInstance from '~/utils/authorizedAxios';
 import { API_ROOT } from '~/utils/constants';
 import styles from './LoginForm.module.scss';
@@ -14,14 +15,14 @@ function LoginForm() {
     const navigate = useNavigate();
 
     const submitLogIn = async (data) => {
-        const res = await authorizedAxiosInstance.post(`${API_ROOT}/api/auth/sign-in`, data);
+        const res = await authorizedAxiosInstance.post(`${API_ROOT}/api/v1/auth/sign-in`, data);
         localStorage.setItem('accessToken', res.data.result.accessToken);
         localStorage.setItem('userId', res.data.result.userId);
 
-        const res2 = await authorizedAxiosInstance.get(`${API_ROOT}/api/v1/user/my-info`);
+        const res2 = handleGetMyInfoAPI();
         const roleInfo = res2.data.result.roles[0].roleName;
         if (roleInfo === 'ADMIN') {
-            navigate('/news');
+            navigate('/page-admin');
         } else {
             navigate('/home');
         }
@@ -31,7 +32,7 @@ function LoginForm() {
     return (
         <div className={cx('wrapper')}>
             <form onSubmit={handleSubmit(submitLogIn)}>
-                <h1>Login</h1>
+                <h1>Đăng Nhập</h1>
                 <div className={cx('input-box')}>
                     <input
                         type="text"
@@ -53,10 +54,10 @@ function LoginForm() {
                     <FaLock className={cx('icon')} />
                 </div>
 
-                <button type="submit">Login</button>
+                <button type="submit">Đăng Nhập</button>
                 <div className={cx('register-link')}>
                     <span className="fw-light">
-                        Don't have an account? <a href="a">Register</a>
+                        Chưa có tài khoản? <a href="a">Đăng ký</a>
                     </span>
                 </div>
             </form>

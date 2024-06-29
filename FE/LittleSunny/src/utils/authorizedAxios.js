@@ -16,7 +16,7 @@ authorizedAxiosInstance.interceptors.request.use(
         // const refreshToken = localStorage.getItem('refreshToken');
         if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
-        } 
+        }
         // else if (refreshToken) {
         //     config.headers.Authorization = `Bearer ${refreshToken}`;
         // }
@@ -29,7 +29,10 @@ authorizedAxiosInstance.interceptors.request.use(
 authorizedAxiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
-        const { config, response: { status } } = error;
+        const {
+            config,
+            response: { status },
+        } = error;
         const originalRequest = config;
 
         // const handleLogout = async () => {
@@ -58,7 +61,7 @@ authorizedAxiosInstance.interceptors.response.use(
 
             try {
                 const response = await refreshTokenAPI(localStorage.getItem('userId'));
-                const { userId, accessToken  } = response.data.result;
+                const { userId, accessToken } = response.data.result;
                 localStorage.setItem('accessToken', accessToken);
                 localStorage.setItem('userId', userId);
 

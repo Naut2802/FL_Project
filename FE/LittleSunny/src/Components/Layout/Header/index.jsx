@@ -1,4 +1,3 @@
-
 import { FaUserCircle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import styles from './Header.module.scss';
@@ -11,7 +10,7 @@ function Header() {
         <div className={cx('css')}>
             <nav className={cx('nav', 'navbar navbar-expand-lg bg-body-tertiary')}>
                 <div className={cx('container-fluid')}>
-                    <Link className={cx('navbar-brand')} to="/">
+                    <Link className={cx('navbar-brand')} to="/home">
                         <img src={logo} alt="" className={cx('logo', 'img-fluid rounded mx-auto d-block')} />
                     </Link>
                     <button
@@ -28,17 +27,17 @@ function Header() {
                     <div className={cx('collapse navbar-collapse justify-content-center')} id="navbarNav">
                         <ul className="navbar-nav">
                             <li className="nav-item">
-                                <Link className="nav-link active mx-2" aria-current="page" to="hocvien">
+                                <Link className="nav-link active mx-2" aria-current="page" to="student">
                                     DANH SÁCH HỌC VIÊN
                                 </Link>
                             </li>
                             <li className="nav-item border-start border-3">
-                                <Link className="nav-link active mx-2" aria-current="page" to="add">
+                                <Link className="nav-link active mx-2" aria-current="page" to="addS">
                                     ĐĂNG KÝ
                                 </Link>
                             </li>
                             <li className="nav-item border-start border-3">
-                                <Link className="nav-link active  mx-2" aria-current="page" to="khoahoc">
+                                <Link className="nav-link active  mx-2" aria-current="page" to="classes">
                                     DANH SÁCH LỚP
                                 </Link>
                             </li>
