@@ -1,6 +1,7 @@
 package com.littlesunny.service;
 
 import com.littlesunny.dto.request.ClassRequest;
+import com.littlesunny.dto.request.StudentClassRequest;
 import com.littlesunny.dto.response.ClassResponse;
 import com.littlesunny.dto.response.StudentClassResponse;
 import com.littlesunny.entity.Class;
@@ -10,6 +11,7 @@ import com.littlesunny.entity.StudentClassId;
 import com.littlesunny.exception.AppException;
 import com.littlesunny.exception.ErrorCode;
 import com.littlesunny.mapper.ClassMapper;
+import com.littlesunny.mapper.StudentClassIdMapper;
 import com.littlesunny.mapper.StudentClassMapper;
 import com.littlesunny.repository.ClassRepository;
 import com.littlesunny.repository.CourseRepository;
@@ -19,8 +21,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -39,6 +45,7 @@ public class ClassService {
 	StudentRepository studentRepository;
 	ClassMapper classMapper;
 	StudentClassMapper studentClassMapper;
+	StudentClassIdMapper studentClassIdMapper;
 	
 	public ClassResponse createClass(ClassRequest request) {
 		if (classRepository.existsByClassName(request.getClassName()))
@@ -133,8 +140,10 @@ public class ClassService {
 		classRepository.deleteById(id);
 	}
 	
-	public List<ClassResponse> getClasses() {
-		List<Class> classes = classRepository.findAll();
+	@Transactional(readOnly = true)
+	public List<ClassResponse> getClasses(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Class> classes = classRepository.findAll(pageable);
 		List<ClassResponse> classResponses = new ArrayList<>();
 		
 		classes.forEach(clazz -> classResponses.add(ClassResponse.builder()
@@ -153,5 +162,16 @@ public class ClassService {
 	
 	public long countStudentsInClass(long classId) {
 		return studentClassRepository.countStudentsByClassId(classId);
+	}
+	
+	public void deleteStudentFromClass(StudentClassRequest request) {
+		if (!studentRepository.existsById(request.getStudentId()))
+			throw new AppException(ErrorCode.STUDENT_NOT_EXISTED);
+		
+		StudentClassId id = studentClassIdMapper.toStudentClassId(request);
+		if (!studentClassRepository.existsById(id))
+			throw new AppException(ErrorCode.CLASS_NOT_EXISTED);
+		
+		studentClassRepository.deleteById(id);
 	}
 }

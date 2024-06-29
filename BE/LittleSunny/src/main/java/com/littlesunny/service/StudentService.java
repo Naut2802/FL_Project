@@ -19,6 +19,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -132,8 +135,10 @@ public class StudentService {
 		studentRepository.deleteById(id);
 	}
 	
-	public List<StudentResponse> getStudents() {
-		List<Student> students = studentRepository.findAll();
+	@Transactional(readOnly = true)
+	public List<StudentResponse> getStudents(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Student> students = studentRepository.findAll(pageable);
 		List<StudentResponse> studentResponses = new ArrayList<>();
 		
 		students.forEach(student ->
@@ -154,8 +159,9 @@ public class StudentService {
 	}
 	
 	@Transactional(readOnly = true)
-	public List<StudentResponse> getStudentsNotEnrolled(long courseId) {
-		return studentRepository.findStudentsNotEnrolledInCourse(courseId).stream().map(studentMapper::toStudentResponse).toList();
+	public List<StudentResponse> getStudentsNotEnrolled(long courseId, int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		return studentRepository.findStudentsNotEnrolledInCourse(courseId, pageable).stream().map(studentMapper::toStudentResponse).toList();
 	}
 	
 	public StudentResponse updatePaymentStatus(StudentClassRequest request) {

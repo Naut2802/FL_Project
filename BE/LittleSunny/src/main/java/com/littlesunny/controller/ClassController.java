@@ -1,6 +1,7 @@
 package com.littlesunny.controller;
 
 import com.littlesunny.dto.request.ClassRequest;
+import com.littlesunny.dto.request.StudentClassRequest;
 import com.littlesunny.dto.response.ClassResponse;
 import com.littlesunny.dto.response.ResponseApi;
 import com.littlesunny.service.ClassService;
@@ -42,10 +43,20 @@ public class ClassController {
 				.build();
 	}
 	
+	@DeleteMapping("delete-student-from-class")
+	public ResponseApi<?> deleteStudentFromClass(@RequestBody StudentClassRequest request) {
+		classService.deleteStudentFromClass(request);
+		return ResponseApi.builder()
+				.result("Đã xóa học viên khỏi lớp")
+				.build();
+	}
+	
 	@GetMapping
-	public ResponseApi<List<ClassResponse>> getClasses() {
+	public ResponseApi<List<ClassResponse>> getClasses(
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
 		return ResponseApi.<List<ClassResponse>>builder()
-				.result(classService.getClasses())
+				.result(classService.getClasses(page, size))
 				.build();
 	}
 	
