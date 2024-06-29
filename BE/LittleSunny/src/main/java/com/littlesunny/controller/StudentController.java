@@ -63,4 +63,12 @@ public class StudentController {
 				.result(studentService.updatePaymentStatus(request))
 				.build();
 	}
+	
+	@DeleteMapping("delete-student-from-class")
+	public ResponseApi<?> deleteStudentFromClass(@RequestBody StudentClassRequest request) {
+		studentService.deleteStudentFromClass(request);
+		return ResponseApi.builder()
+				.result("Đã xóa học viên khỏi lớp")
+				.build();
+	}
 }

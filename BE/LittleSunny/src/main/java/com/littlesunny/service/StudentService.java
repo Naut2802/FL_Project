@@ -172,4 +172,15 @@ public class StudentService {
 		studentResponse.setClasses(List.of(studentClassMapper.toClassStudentResponse(studentClass)));
 		return studentResponse;
 	}
+	
+	public void deleteStudentFromClass(StudentClassRequest request) {
+		if (!studentRepository.existsById(request.getStudentId()))
+			throw new AppException(ErrorCode.STUDENT_NOT_EXISTED);
+		
+		StudentClassId id = studentClassIdMapper.toStudentClassId(request);
+		if (!studentClassRepository.existsById(id))
+				throw new AppException(ErrorCode.CLASS_NOT_EXISTED);
+		
+		studentClassRepository.deleteById(id);
+	}
 }
