@@ -38,7 +38,7 @@ function HocVien_Lop() {
                 <Link underline="hover" color="inherit" href="/home">
                     Trang Chủ
                 </Link>
-                <Link underline="hover" color="inherit" href="/home/classes">
+                <Link underline="hover" color="inherit" href="/classes">
                     Danh Sách Lớp
                 </Link>
             </Breadcrumbs>

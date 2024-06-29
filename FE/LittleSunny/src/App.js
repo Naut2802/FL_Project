@@ -8,6 +8,7 @@ import DSHocVienLop from './Components/Layout/HocVienLop/HocVien_Lop';
 import ThongKe from './Components/Layout/ThongKe/ThongKe';
 import Home from './pages/Home';
 import News from './pages/News';
+import HomeAdmin from './Components/Layout/HomeAdmin';
 
 const ProtectedRoute = () => {
     const user = JSON.parse(localStorage.getItem('userInfo'));
@@ -28,12 +29,14 @@ function App() {
     return (
         <Routes>
             <Route path="/" element={<Navigate to="/login" replace={true} />} />
-            <Route path="/home" element={<Home />}>
+            <Route path="/home" element={<Navigate to="/page-admin" replace={true} />} />
+            <Route element={<Home />}>
                 <Route path="student" element={<DSHocVien />} />
                 <Route path="addS" element={<AddStudent />} />
                 <Route path="course" element={<DSLopKhoaHoc />} />
                 <Route path="classes" element={<DSHocVienLop />} />
                 <Route path="thongke" element={<ThongKe />} />
+                <Route path="page-admin" element={<HomeAdmin />} />
             </Route>
 
             <Route element={<ProtectedRoute />}>

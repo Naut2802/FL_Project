@@ -8,7 +8,7 @@ function Home() {
             <div className="col-auto col-md-2">
                 <SideBar />
             </div>
-            <div className="col-auto col-md-10">
+            <div className="col-auto col-md-10 ">
                 <Outlet />
             </div>
         </div>

@@ -55,7 +55,7 @@ function DSHocVien() {
                 <Link underline="hover" color="inherit" href="/home">
                     Trang Chủ
                 </Link>
-                <Link underline="hover" color="inherit" href="/home/student">
+                <Link underline="hover" color="inherit" href="/student">
                     Danh Sách Học Viên
                 </Link>
             </Breadcrumbs>

@@ -22,17 +22,6 @@ function SideBar() {
                             />
                         </Link>
                         <hr className="text-secondary d-none d-sm-block" />
-                        <button
-                            className="navbar-toggler"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#navbarSupportedContent"
-                            aria-controls="navbarSupportedContent"
-                            aria-expanded="false"
-                            aria-label="Toggle navigation"
-                        >
-                            <span className="navbar-toggler-icon"></span>
-                        </button>
                         <ul className="nav nav-pills flex-column">
                             <li className="nav-item fs-4 my-1 py-2 py-sm-0">
                                 <Link to="addS" className="nav-link  text-black">
