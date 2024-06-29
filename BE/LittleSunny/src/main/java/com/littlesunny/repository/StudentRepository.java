@@ -1,6 +1,8 @@
 package com.littlesunny.repository;
 
 import com.littlesunny.entity.Student;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,7 +21,7 @@ public interface StudentRepository extends JpaRepository<Student, String> {
 			"  JOIN sc.clazz c " +
 			"  WHERE c.course.id = :courseId" +
 			")")
-	List<Student> findStudentsNotEnrolledInCourse(@Param("courseId") Long courseId);
+	Page<Student> findStudentsNotEnrolledInCourse(@Param("courseId") Long courseId, Pageable pageable);
 	@Query("SELECT MAX(CAST(SUBSTRING(s.id, 3) AS int)) FROM Student s WHERE s.id LIKE 'HV%'")
 	Integer findMaxIdNumber();
 }

@@ -44,16 +44,21 @@ public class StudentController {
 	}
 	
 	@GetMapping
-	public ResponseApi<List<StudentResponse>> getStudents() {
+	public ResponseApi<List<StudentResponse>> getStudents(
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
 		return ResponseApi.<List<StudentResponse>>builder()
-				.result(studentService.getStudents())
+				.result(studentService.getStudents(page, size))
 				.build();
 	}
 	
 	@GetMapping("/not-enrolled-in-course/{courseId}")
-	public ResponseApi<List<StudentResponse>> getStudentsNotEnrolled(@PathVariable Long courseId) {
+	public ResponseApi<List<StudentResponse>> getStudentsNotEnrolled(
+			@PathVariable Long courseId,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
 		return ResponseApi.<List<StudentResponse>>builder()
-				.result(studentService.getStudentsNotEnrolled(courseId))
+				.result(studentService.getStudentsNotEnrolled(courseId, page, size))
 				.build();
 	}
 	
